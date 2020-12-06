@@ -25,6 +25,6 @@ File storage functions will work only on windows, however everything else works 
 # requirements.txt
 Beautiful Soup is required
 # .exe
-There is a compiled version of this programm.
+There is a compiled version of this program.
 
  
