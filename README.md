@@ -9,7 +9,7 @@ A nickname of the user will be used as the name of the list later on.
 There is an option to store loaded lists locally.<br />
 They will be located in the folder named ShokiMore in the same directory as where the program is stored.<br />
 Local lists get the nickname of the user as a name, if there are more than 1 user with simmilar name, then figures 1 - amount of files will be used after a nickname.<br />
-However, date and time when the file was created will be stored in the file itself, they will appear as: 'nickname Created at date' in the programm afterwards<br />
+However, date and time when the file was created will be stored in the file itself, they will appear as: 'nickname Created at date' in the program afterwards<br />
 # Comparing lists
 Local lists can not be compared with lists loaded from the website.<br />
 There is two options to compare:<br />
