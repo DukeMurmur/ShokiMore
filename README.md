@@ -16,8 +16,8 @@ There is two options to compare:<br />
 1. Merges search<br />
 Script will search all identical items (using IDs) in the lists loaded to search function.<br /><br />
 2. Difference search<br />
-To search titles, that appear in list A but don't appear in list B, use difference search for lists A B, then pick user B (To find an area of Not A)<br />
-Difference search for lists A B, then pick user A (To find an area of Not B)<br />
+To search titles, that appear in list A but don't appear in list B, use difference search for lists A B, then pick user B (To find an area of Not B)<br />
+Difference search for lists A B, then pick user A (To find an area of Not A)<br />
 Or pick the last avaliable option, then it will work as an opposite to Merges search (Not A and Not B)<br />
 Similarly it can be used for 3 or more users.
 # Windows & Linux
