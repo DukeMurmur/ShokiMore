@@ -1,44 +1,204 @@
-#Imports and global values cell
-
-import requests
-import json
-import bs4
 import os
+import sys
+import time
+import math
+import random
+import json
+import pickle
+import requests
+import binascii
+import msvcrt
+import operator
+import textwrap
+import ansicon
+import zlib
 import platform
 import shlex
 import struct
+
 from pathlib import Path
-from time import localtime as time
-from time import sleep
-from math import floor
+from datetime import datetime
+from itertools import chain
 
-global users_list
-global sort
-global alphabet
-global info_logo
-global main_logo
+def main_logo():
+    ansicon.load()
+    [sys.stdout.write(u"\u001b[38;5;" + str(random.randint(0, 15) * 16 + random.randint(0, 15)) + "m" + item) for item in zlib.decompress(b'x\x9c\xd5\xd51n\xc30\x0c\x05\xd0=\xa7\xd0\t\x8c\xb6c\xee\xe0\xc9g0 \xa3\x83\x00\x0f=\x7fm\x91\x14?e\xbb\xa2\x9c,\xfd\x8bU!\xc5\x0b%\x86\x0e\xa1\x9d\xc9&\x84Hi\xfc\xdb7\xc7\xee.[Bxx\xd4\xa7\xcd\x14b~6]\xfa\xb8u\x97}kq\xb8\xa4R\xa5op\xdd\xf5\xb2Kk>\xe8W\\J\x9f+\x89\xc4\xd6\x97\x9c4\x00gW\xaez\xa1\xbc\xe4r\xd5B\xa7\x04=\x90eu\xcb*_\xaf\xeb~\t\xa6>6\xae&\xcb\xc9\xee=\x13hP\xb8\xbb\xaf\xb4\xa1\xa7\x82\xc7\x02\xf2*\x8a\x9b\x0f\xb9v\x81\xedqs?I\x19YVM\x97\x891)=ica{u\xb9AZ\x99\xaf\x1a\xfb96]d\xbb]\xc2\xa9\xe4\x7f\xe2\xde;\xe72\x94=\xae\xe9\xab27\xeav\xde\xe0\xc7\xc8\xa94\xdd\xc6fn\xbb\x1ap\x01V\x97?fa\xd8=\xbc\x15.\xfa\xea87`NVs\x03\\\x03\x9b\xcd\xc3[\xd0\xbe\x07a]\xcdI|\x0fVs\x12\\\x80\xcf\xf6\xde\x1cp\x0bRm\xd9*\xd6=\xf2\xe4\xf5\x9e\x19\xd2\xe92lw\xea[[\xf7\xe7\xc6\x95\xbd\x95Tl\x01\x87\xac}%\xf0X\xfe\xda\x9f\x87.]\x9fu6x\x16o\xe6/\xd0\x94\xc5\x1d\xd93\x8f\xe2\xc2\xafR*\xcdg\xccKa\xe9\xc0a\xedq\xa1\xd01X\xd7L\xa1UOW\xd6r\xc8Zo\x8f\x8b?Z\xafK1\x97\xebb\x8d\xcb\x18,[.\x07\xaf\xd7\xd9\xd1\xc6\r:1\xef\xb8\xed*\xaf\\\xcde_\xfd\xe5v\xc0>Ws\xea\x02|\xef\x9c\x8f\xeeq\xda\x9f\xb9\xd5\xdcp\xd4\xdd~\x0f\xd6\xd3\xde\x8eG\x90}\x93\xf2g\xf8\x1a>\x86\xcf_\x00C\xc9D').decode()]
+    print('')
+    ansicon.unload()
+    time.sleep(3)
+    os.system('CLS')
 
-main_logo = ' |\\___/|                                                    \n )     (           _=,_                                     \n=\\     /=       o_/6 /#\\                                    \n  )===(         \\__ |##/                                    \n /     \\         =\'|--\\                                     \n |     |           /   #\'-.                                 \n/       \\          \\#|_   _\'-. /                            \n\\       /           |/ \\_( # |"                             \n \\__  _/           C/ ,--___/                               \n   ( (                                                      \n    ) )                     Developed by:                   \n    (_(                           Duke Murmur & Count Furfur'
+main_logo()
 
-alphabet = ['А','а','Б','б','В','в','Г','г','Д','д','Е','е','Ё','ё','Ж','ж','З','з','И','и','Й','й','К','к','Л','л',
-            'М','м','Н','н','О','о','П','п','Р','р','С','с','Т','т','У','у','Ф','ф','Х','х','Ц','ц','Ч','ч','Ш','ш',
-            'Щ','щ','Ъ','ъ','Ы','ы','Ь','ь','Э','э','Ю','ю','Я','я',' ', ':', '%', '?', '!', '@', '#', ';', '%', '*',
-            '(', ')', '.', ',', '—', '-']
+from colorama import init
 
-sort = 0
+init()
 
-info_logo = ['  ___ _  _ ___ ___  ',
-             ' |_ _| \\| | __/ _ \\ ',
-             '  | || .` | _| (_) |',
-             ' |___|_|\\_|_| \\___/ ']
+from colorama import Fore, Back, Style
 
-#Anime Class cell
+def on_start_up():
 
+    try:
+        os.mkdir('ShokiMore_Data')
+
+    except:
+        None
+
+    os.chdir('ShokiMore_Data')
+
+class Terminal():
+
+    class Size():
+        def __init__(self, size_list):
+            self.x = size_list[0]
+            self.y = size_list[1]
+            
+    def __init__(self):
+        self.size = self.Size(self.terminal_size())
+
+    def terminal_size(self):
+
+        def get_terminal_size():
+            current_os = platform.system()
+            tuple_xy = None
+
+            if current_os == 'Windows':
+                tuple_xy = _get_terminal_size_windows()
+
+                if tuple_xy is None:
+                    tuple_xy = _get_terminal_size_tput()
+
+            if current_os in ['Linux', 'Darwin'] or current_os.startswith('CYGWIN'):
+                tuple_xy = _get_terminal_size_linux()
+
+            if tuple_xy is None:
+                tuple_xy = (80, 25)
+            return tuple_xy
+
+
+        def _get_terminal_size_windows():
+
+            try:
+                from ctypes import windll, create_string_buffer
+                h = windll.kernel32.GetStdHandle(-12)
+                csbi = create_string_buffer(22)
+                res = windll.kernel32.GetConsoleScreenBufferInfo(h, csbi)
+                if res:
+                    (bufx, bufy, curx, cury, wattr,
+                     left, top, right, bottom,
+                     maxx, maxy) = struct.unpack("hhhhHhhhhhh", csbi.raw)
+                    sizex = right - left + 1
+                    sizey = bottom - top + 1
+                    return sizex, sizey
+            except:
+                pass
+
+
+        def _get_terminal_size_tput():
+
+            try:
+                cols = int(subprocess.check_call(shlex.split('tput cols')))
+                rows = int(subprocess.check_call(shlex.split('tput lines')))
+                return (cols, rows)
+            except:
+                pass
+
+
+        def _get_terminal_size_linux():
+
+            def ioctl_GWINSZ(fd):
+                try:
+                    import fcntl
+                    import termios
+                    cr = struct.unpack('hh',
+                                       fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
+                    return cr
+
+                except:
+                    pass
+
+            cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
+
+            if not cr:
+                try:
+                    fd = os.open(os.ctermid(), os.O_RDONLY)
+                    cr = ioctl_GWINSZ(fd)
+                    os.close(fd)
+
+                except:
+                    pass
+
+            if not cr:
+                try:
+                    cr = (os.environ['LINES'], os.environ['COLUMNS'])
+
+                except:
+                    return None
+
+            return int(cr[1]), int(cr[0])
+
+        def det_size():
+            if __name__ == "__main__":
+                sizex, sizey = get_terminal_size()
+
+                return [sizex, sizey]
+        return det_size()
+
+def author_logo(lenght : int):
+
+    author_logo = ' |\\___/|                                                    \n )     (           _=,_                                     \n=\\     /=       o_/6 /#\\                                    \n  )===(         \\__ |##/                                    \n /     \\         =\'|--\\                                     \n |     |           /   #\'-.                                 \n/       \\          \\#|_   _\'-. /                            \n\\       /           |/ \\_( # |"                             \n \\__  _/           C/ ,--___/                               \n   ( (                                                      \n    ) )                     Developed by:                   \n    (_(                           Duke Murmur & Count Furfur'
+    
+    pattern = ['|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|',
+               '|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|']
+
+    print(Style.BRIGHT, end = '')
+    print(Fore.MAGENTA, end = '')
+
+    print(pattern[0][0 : lenght - 1])
+    print(pattern[1][0 : lenght - 1])
+    print('\n')
+
+    print(Fore.YELLOW, end = '')
+
+    print(author_logo[0 : len(author_logo) - 93], end = '')
+    
+    print(Fore.CYAN, end = '')
+
+    print(author_logo[len(author_logo) - 93 : len(author_logo) - 75], end = '')
+
+    print(Fore.YELLOW, end = '')
+
+    print(author_logo[len(author_logo) - 75 : len(author_logo) - 45], end = '')
+
+    print(Fore.CYAN, end = '')
+
+    print(author_logo[len(author_logo) - 45 : len(author_logo)], end = '')
+    print('\n')
+
+    print(Fore.MAGENTA, end = '')
+
+    print(pattern[0][0 : lenght - 1])
+    print(pattern[1][0 : lenght - 1])
+
+    output = '© All rights reserved, 2020'
+    spaces = ' ' * (lenght - len(output))
+    output = spaces + output
+
+    print(Fore.RED, end = '')
+    print('\n\n' + output)
+
+    print(Style.RESET_ALL, end = '')
+
+    time.sleep(3)
+    os.system('CLS')
+    
 class Anime():
+
     def __init__(self, idt : str, name : str, russian : str, url : str, description : str, kind : str, score : float, 
                  status : str, episodes : int, episodes_aired : int, aired_on : str, released_on : str,
                  rating : str, duration : int, anons : bool, ongoing : bool, myanimelist_id : str, rates_scores_stats : list,
                  rates_statuses_stats : list, next_episode_at : str, user_status : str, user_episodes : int):
+        
         self.idt = idt
         self.name = name
         self.russian = russian
@@ -61,878 +221,1174 @@ class Anime():
         self.next_episode_at = next_episode_at
         self.user_status = user_status
         self.user_episodes = user_episodes
+        self.clear_text(description)
+
+    def clear_text(self, description):
+
+        try:
+
+            self.description = self.description.replace('[[', '')
+            self.description = self.description.replace(']]', '')
+            self.description = self.description.replace(' .', '.')
+            self.description = self.description.replace(' ,', ',')
+            self.description = self.description.replace('\n', ' ')
+            self.description = self.description.replace('\r', ' ')
+            self.description = self.description.replace('  ', ' ')
+
+            while True:
+
+                if self.description.find('[') == -1:
+
+                    self.description = self.description.replace(' .', '.')
+                    self.description = self.description.replace(' ,', ',')
+                    self.description = self.description.replace('  ', ' ')
+
+                    return self.description
+
+                else:
+
+                    self.description = self.description.replace(self.description[self.description.find('[') : self.description.find(']') + 1], '', 1)
+
+        except:
+
+            self.description = 'Нет описания'
+
+
+    def pad_text(self, length):
+
+        return textwrap.fill(self.description, length)
         
-    def filt(self):
-        new_string = ''
-        for letter in self.description:
-            if letter in alphabet:
-                new_string += letter
-        self.description = new_string
+class AnimeList():
 
-def variables():
-    global f0 
-    global f1
-    global f2
-    global f3
-    global f4
-    global f5
-    global f6
-    global f7
-    global f8
-    global f9
-    global dot
+    def __init__(self, nickname, options, filepath = None):
 
-    f0 = '  ___   \n / _ \\  \n| | | | \n| | | | \n| |_| | \n \\___/  '
-    f1 = ' __  \n/_ | \n | | \n | | \n | | \n |_| '
-    f2 = ' ___   \n|__ \\  \n   ) | \n  / /  \n / /_  \n|____| '
-    f3 = ' ____   \n|___ \\  \n  __) | \n |__ <  \n ___) | \n|____/  '
-    f4 = ' _  _    \n| || |   \n| || |_  \n|__   _| \n   | |   \n   |_|   '
-    f5 = ' _____  \n| ____| \n| |__   \n|___ \\  \n ___) | \n|____/  '
-    f6 = "   __   \n  / /   \n / /_   \n| '_ \\  \n| (_) | \n \\___/  "
-    f7 = ' ______  \n|____  | \n    / /  \n   / /   \n  / /    \n /_/     '
-    f8 = '  ___   \n / _ \\  \n| (_) | \n > _ <  \n| (_) | \n \\___/  '
-    f9 = '  ___   \n / _ \\  \n| (_) | \n \\__, | \n   / /  \n  /_/   '
-    dot = '   \n   \n   \n   \n _ \n(_)'
+        self.nickname = nickname
+        self.filepath = filepath
+        self.options = options
 
-#Progress bar function
+        self.parameters = {'c' : 'completed', 'd' : 'dropped', 'o' : 'on_hold', 'p' : 'planned',
+                           'r' : 'rewatching', 'w' : 'watching', 'b' : 'released', 'n' : 'ongoing',
+                           'm' : 'anons'}
 
-def printProgressBar(iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+        self.load()
 
-    """
-    Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        length      - Optional  : character length of bar (Int)
-        fill        - Optional  : bar fill character (Str)
-        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
-    """
+    def load(self):
+
+        if self.options == 'webload':
+
+            try:
+                self.animelist = self.webload()
+                self.raw_data = self.convert_to_dictionary()
+                self.type = 'Loaded form Shikimori'
+                self.date = datetime.strptime('23595922221231Monday','%H%M%S%Y%m%d%A')
+
+            except:
+                sys_output = 'Unable to load data for ' + self.nickname + '. Check the username correctness and internet connection'
+                length = Terminal().size.x - len(sys_output)
+                Print().cprint(sys_output + ' ' * length, 'r')
+
+                self.animelist = 'Error: Download_error'
+                return 0
+
+        elif self.options == 'locaload':
+            self.type = 'Local file at ' + datetime.strptime(binascii.a2b_hex(self.filepath.stem.encode()).decode().split('|')[0],'%H%M%S%Y%m%d%A').__format__('Date: %H:%M:%S %Y/%m/%d %A')
+            self.date = datetime.strptime(binascii.a2b_hex(self.filepath.stem.encode()).decode().split('|')[0],'%H%M%S%Y%m%d%A')
+            self.raw_data = self.locaload()
+            self.animelist = self.convert_to_class_objects()
+
+        else:
+            None
+        
+        self.completed = [item for item in self.animelist if item.user_status == 'completed']
+        self.dropped = [item for item in self.animelist if item.user_status == 'dropped']
+        self.on_hold = [item for item in self.animelist if item.user_status == 'on_hold']
+        self.planned = [item for item in self.animelist if item.user_status == 'planned']
+        self.rewatching = [item for item in self.animelist if item.user_status == 'rewatching']
+        self.watching = [item for item in self.animelist if item.user_status == 'watching']
+        self.released = [item for item in self.animelist if item.status == 'released']
+        self.ongoing = [item for item in self.animelist if item.status == 'ongoing']
+        self.anons = [item for item in self.animelist if item.status == 'anons']
+
+        self.custom = []
+
+    def webload(self):
+
+        headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:45.0) Gecko/20100101 Firefox/45.0'}
+        animelist = list()
+        
+        url = 'https://shikimori.one/' + self.nickname + '/list_export/animes.json'
+        data = requests.get(url, headers = headers, allow_redirects = True)
+        raw_data = json.loads(data.content.decode())
+        
+        count = 0
+        
+        for item in raw_data:
+            
+            (progress_bar(count, len(raw_data) - 1, 'Processing data for ' + self.nickname, 'Completed'))
+            count += 1
+            
+            url = 'https://shikimori.one/api/animes/' + str(item['target_id'])
+            data = requests.get(url, headers = headers, allow_redirects = True)
+            
+            while len(data.content.decode()) <= 20:
+                    data = requests.get(url, headers = headers, allow_redirects = True)
+            
+            api_data = json.loads(data.content.decode())
+            
+            animelist.append(Anime(api_data['id'], 
+                                    api_data['name'], 
+                                    api_data['russian'], 
+                                    api_data['url'], 
+                                    api_data['description'], 
+                                    api_data['kind'], 
+                                    api_data['score'], 
+                                    api_data['status'], 
+                                    api_data['episodes'], 
+                                    api_data['episodes_aired'], 
+                                    api_data['aired_on'],
+                                    api_data['released_on'], 
+                                    api_data['rating'], 
+                                    api_data['duration'], 
+                                    api_data['anons'], 
+                                    api_data['ongoing'],
+                                    api_data['myanimelist_id'], 
+                                    api_data['rates_scores_stats'], 
+                                    api_data['rates_statuses_stats'], 
+                                    api_data['next_episode_at'],
+                                    item['status'],
+                                    item['episodes']))
+
+        progress_bar(1, 1, 'Processing data for ' + self.nickname, 'Completed')
+        print('')
+            
+        return animelist
+
+    def locaload(self):
+        with open(self.filepath, 'rb') as file:
+            return pickle.load(file)
+
+    def save(self):
+
+        filename = binascii.b2a_hex((datetime.strftime(datetime.today(), '%H%M%S%Y%m%d%A') + '|' + self.nickname).encode()).decode() + '.smf'
+
+        with open(filename, 'wb') as file:
+            pickle.dump(self.convert_to_dictionary(), file)
+
+    def convert_to_dictionary(self):
+        
+        return [{'idt' : item.idt, 
+                 'name' : item.name, 
+                 'russian' : item.russian, 
+                 'url' : item.url, 
+                 'description' : item.description, 
+                 'kind' : item.kind, 
+                 'score' : item.score, 
+                 'status' : item.status, 
+                 'episodes' : item.episodes, 
+                 'episodes_aired' : item.episodes_aired, 
+                 'aired_on' : item.aired_on, 
+                 'released_on' : item.released_on, 
+                 'rating' : item.rating, 
+                 'duration' : item.duration, 
+                 'anons' : item.anons, 
+                 'ongoing' : item.ongoing,
+                 'myanimelist_id' : item.myanimelist_id,
+                 'rates_scores_stats' : item.rates_scores_stats,
+                 'rates_statuses_stats' : item.rates_statuses_stats,
+                 'next_episode_at' : item.next_episode_at, 
+                 'user_status' : item.user_status, 
+                 'user_episodes' : item.user_episodes
+                 } for item in self.animelist]
+
+    def convert_to_class_objects(self):
+        
+        return [(Anime(item['idt'], 
+                 item['name'], 
+                 item['russian'], 
+                 item['url'], 
+                 item['description'], 
+                 item['kind'], 
+                 item['score'], 
+                 item['status'], 
+                 item['episodes'], 
+                 item['episodes_aired'], 
+                 item['aired_on'],
+                 item['released_on'], 
+                 item['rating'], 
+                 item['duration'], 
+                 item['anons'], 
+                 item['ongoing'],
+                 item['myanimelist_id'], 
+                 item['rates_scores_stats'], 
+                 item['rates_statuses_stats'], 
+                 item['next_episode_at'],
+                 item['user_status'],
+                 item['user_episodes'])) for item in self.raw_data]
+
+    def custom_list(self, parameters):
+
+        self.custom = []
+        [(duplicate_list := [item.idt for item in self.custom], [self.custom.append(item) 
+        for item in operator.attrgetter(self.parameters[letter])(self) 
+        if letter in parameters if item.idt not in duplicate_list]) for letter in parameters]
+
+class Convertation():
+    def __init__(self, users_list):
+        self.users_list = users_list
+
+    def resort(self):
+        return sorted(sorted(self.users_list, key=operator.attrgetter('date'), reverse = True), key=operator.attrgetter('nickname'))
+
+    def convert_to_dictionary(self):
+        return {str(n + 1) : self.users_list[n] for n in range(len(self.users_list))}
+
+    def convert_to_id_dictionary(self):
+        return {self.users_list[n] : self.users_list[n].idt for n in range(len(self.users_list))}
+
+    def convert_to_anime_dictionary(self):
+        return {str(n + 1) : self.users_list[n] for n in range(len(self.users_list))}
+
+class Merges():
+    def __init__(self, users_list):
+        self.users_list = users_list
+
+    def search_for_merges(self):
+        merged_list = list(chain.from_iterable([item.custom for item in self.users_list]))
+        id_list = [operator.attrgetter('idt')(merged_list[n]) for n in range(len(merged_list))]
+        return [merged_list[item] for item in list(set([id_list.index(item) for item in id_list if id_list.count(item) == len(self.users_list)]))]
+
+    def search_for_differences(self):
+        merged_list = list(chain.from_iterable([item.custom for item in self.users_list]))
+        id_list = [operator.attrgetter('idt')(merged_list[n]) for n in range(len(merged_list))]
+
+        os.system('CLS')
+        Print().merges_header()
+        Print().merges_list_header()
+        Print().cprint(Print(self.users_list).print_users_list(), 'g', 1)
+
+        while True:
+            Print().merges_reference_user_input()
+            inp = input()
+
+            if inp == '':
+                self.reference = []
+                break
+
+            try:
+                self.reference = [item.idt for item in self.users_list[int(inp) - 1].custom]
+                Print(self.users_list[int(inp) - 1].nickname).merges_reference_user_name()
+                break
+
+            except:
+                Print().merges_reference_user_input_error()
+
+        Print(self.users_list).merges_list_print() 
+
+        while True:
+            
+            try:
+                Print().merges_list_input()
+                inp = int(input())
+                
+                if 1 <= inp <= (len(self.users_list) + 1):
+                    break
+                
+                else:
+                    raise Error
+            
+            except:
+                Print().merges_list_type_error()
+
+        return [[merged_list[item] for item in list(set([id_list.index(item) for item in id_list if id_list.count(item) < len(self.users_list) if item not in self.reference]))] if len(self.users_list) == int(inp) else [merged_list[item] for item in list(set([id_list.index(item) for item in id_list if id_list.count(item) == inp if item not in self.reference]))]][0]
+        
+class Load():
+    def __init__(self, path):
+        self.path = path
+        self.name = binascii.a2b_hex(path.stem.encode()).decode().split('|')[1]
+        self.date = datetime.strptime(binascii.a2b_hex(path.stem.encode()).decode().split('|')[0], '%H%M%S%Y%m%d%A')
+        self.string_date = datetime.strptime(binascii.a2b_hex(path.stem.encode()).decode().split('|')[0],'%H%M%S%Y%m%d%A').__format__('Date: %H:%M:%S %Y/%m/%d %A')
+
+class Manage():
+    def __init__(self, users_list):
+        self.users_list = users_list
+
+    def ui(self):
+
+        while True:
+            os.system('CLS')
+            if self.users_list == []:
+                Print().manage_empty_list_error()
+                time.sleep(2)
+                return self.users_list
+            Print().manage_header()
+            Print().manage_list_header()
+            Print().cprint(Print(self.users_list).print_users_list(), 'g', 1)
+            Print().manage_menu()
+
+            Print().manage_input()
+            inp = msvcrt.getch()
+
+            if inp == b'1':
+                self.view_list()
+
+            if inp == b'2':
+                while self.remove_list() != 0:
+                    None
+
+            elif inp == b'3':
+                self.users_list = []
+                return self.users_list
+
+            elif inp == b'4':
+                self.remove_files()
+
+            elif inp == b'\r':
+                return self.users_list
+
+    def remove_list(self):
+        users_to_delete = list()
+        inp = 'defaults'
+
+        if self.users_list == []:
+            return 0
+
+        os.system('CLS')
+        Print().remove_users_header()
+        Print().manage_list_header()
+        Print().cprint(Print(self.users_list).print_users_list(), 'g', 1)
+
+        Print().manage_delete_input()
+        inp = input()
+
+        if inp == '':
+            return 0
+
+        try:
+            user = self.users_list[int(inp) - 1]
+            self.users_list.remove(user)
+            Print().cprint('User data ' + user.nickname + ' has been removed.', 'g')
+
+        except:
+            Print().cprint('Unable to find user. Type error', 'r')
+
+    def view_list(self):
+
+        while True:
+            os.system('CLS')
+            Print().view_anime_list_header()
+            Print().manage_list_header()
+            Print().cprint(Print(self.users_list).print_users_list(), 'g', 1)
+
+            Print().view_anime_list_input()
+            inp = input()
+
+            if inp == '':
+                break
+
+            try:
+                Main_Output(self.users_list[int(inp) - 1].animelist).ui()
+            except:
+                Print().cprint('Unable to find user. Type error', 'r')
+                time.sleep(0.5)
+
+    def remove_files(self):
+        users_to_load = list()
+        os.system('CLS')
+        Print().remove_files_header()
+
+        classlist = {str(n + 1) : sorted(sorted([Load(item) for item in [f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()]], key=operator.attrgetter('date'), reverse = True), key=operator.attrgetter('name'))[n] for n in range(len([f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()]))}
+        Print('locaload_list', classlist).remove_files_list()
+
+        while True:
+            Print().remove_files_input()
+            inp = input()
+
+            if inp == '':
+                break
+
+            try:
+                filename = classlist[inp].name
+                os.remove(classlist[inp].path)
+                Print().cprint('File ' + filename + ' has been removed', 'g')
+            except:
+                Print().cprint('Unable to remove file', 'r')
+
+class Print():
+    def __init__(self, options = None, data = None):
+        self.options = options
+        self.data = data
+        self.terminal = Terminal()
+
+    #Global
+    def print_users_list(self):
+        users_dict = Convertation(self.options).convert_to_dictionary()
+        return [item for item in [str(key) + '. ' + ((len(str(len(users_dict))) - len(str(key))) * ' ') + (max([len(users_dict[key].nickname) for key in users_dict]) - (len(users_dict[key].nickname))) * ' ' + users_dict[key].nickname + ' | ' + users_dict[key].type for key in users_dict]]
+
+    def generate_users_list(self):
+        output = ''
+
+        users_dict = Convertation(self.options).convert_to_dictionary()
+
+        for key in users_dict:
+            output += (max([len(users_dict[key].nickname) for key in users_dict]) - (len(users_dict[key].nickname))) * ' ' + users_dict[key].nickname + ' | ' + users_dict[key].type + '\n'
+
+        return output
+
+    def reset(self):
+        print(Style.RESET_ALL, end = '')
+
+    def print_color(self, text = None, color = None):
+
+        if color == None:
+            print(Fore.WHITE, end = '')
+            print(text, end = '')
+
+        elif color == 'r':
+            print(Fore.RED, end = '')
+            print(text, end = '')
+
+        elif color == 'g':
+            print(Fore.GREEN, end = '')
+            print(text, end = '')
+
+        elif color == 'b':
+            print(Fore.BLUE, end = '')
+            print(text, end = '')
+
+        elif color == 'y':
+            print(Fore.YELLOW, end = '')
+            print(text, end = '')
+
+        elif color == 'm':
+            print(Fore.MAGENTA, end = '')
+            print(text, end = '')
+
+        elif color == 'c':
+            print(Fore.CYAN, end = '')
+            print(text, end = '')
+
+        else:
+            None
+
+    def cprint(self, text, color, mode = 0, mode_2 = 0):
+        if mode == 0:
+            text = text.split('\n')
+
+        max_value = math.floor((self.terminal.size.x - max([len(item) for item in text])) / 2)
+        if mode_2 == 0:
+            [(print(max_value * ' ', end = ''), self.print_color(item, color), print('')) for item in text]
+        else:
+            [(print(max_value * ' ', end = ''), self.print_color(item, color)) for item in text]
+
+    def cprint_progress(self, text, color, mode = 0, mode_2 = 0):
+        self.print_color(text, random.choice(['b', 'c', 'y']))
+        print('\r', end = '')
+
+    # Menu printing
+    def menu(self):
+        self.cprint('----------------------------------', 'r')
+        self.cprint(" _ __ ___   ___ _ __  _   _ \n| '_ ` _ \\ / _ \\ '_ \\| | | |\n| | | | | |  __/ | | | |_| |\n|_| |_| |_|\\___|_| |_|\\__,_|", 'y')
+        self.cprint('\nList of option: \n\n1. Load data from internet\n2. Load data from local file\n3. Save data to local file\n4. Manage loaded lists\n5. Search for simmilar animes\n6. Search for different animes\n\nEnter to exit', 'c')
+
+    def input_menu(self):
+        [self.cprint('\nEnter number from menu:     ', 'm'), sys.stdout.flush()]
+        self.cprint('----------------------------------', 'r')
+        [self.cprint('\nList of all users loaded: ', 'y') for n in range(1) if self.options != []]
+        self.cprint(self.generate_users_list(), 'g')
+        self.reset()
+    # / Menu printing
+
+    # Web load printing
+    def header_webload(self):
+        self.cprint(" _       _                       _        _                 _ \n(_)     | |                     | |      | |               | |\n _ _ __ | |_ ___ _ __ _ __   ___| |_     | | ___   __ _  __| |\n| | '_ \\| __/ _ \\ '__| '_ \\ / _ \\ __|    | |/ _ \\ / _` |/ _` |\n| | | | | ||  __/ |  | | | |  __/ |_     | | (_) | (_| | (_| |\n|_|_| |_|\\__\\___|_|  |_| |_|\\___|\\__|    |_|\\___/ \\__,_|\\__,_|", 'y')
+    
+    def input_webload(self):
+        self.cprint('\nEnter usernames to be loaded (Press ENTER to start loading): ', 'm')
+
+    def webload_list(self):
+        self.cprint(str(self.options) + ' User nickname: ', 'm', 0, 1)
+
+    def webload_start(self):
+        self.cprint('\nStarting processing users...\n', 'g')
+    # / Web load printing 
+
+    # Local load printing
+    def locaload_list(self):
+        # for dict with Load objects
+        return [([(item) for item in [(key + '. ' + (len(str(len(self.data))) - len(key)) * ' ' + 
+                self.data[key].name + (max([len(self.data[key].name) for key in self.data]) - 
+                len(self.data[key].name)) * ' ' + ' | ' + self.data[key].string_date) for key in self.data]])]
+
+    def load(self):
+        [(print(''), self.cprint('Enter number of user to load its data (ENTER to finish): ', 'm', 0, 1)) 
+         if self.options == 'input_locaload' else self.cprint('Loaded successfully', 'g') 
+         if self.options == 'locaload_ok' else self.cprint('\nError while loading file. Type error or data file is corrupted', 'r')
+         if self.options == 'locaload_error' else (self.cprint(' _                 _      _                 _ \n| |               | |    | |               | |\n| | ___   ___ __ _| |    | | ___   __ _  __| |\n| |/ _ \\ / __/ _` | |    | |/ _ \\ / _` |/ _` |\n| | (_) | (_| (_| | |    | | (_) | (_| | (_| |\n|_|\\___/ \\___\\__,_|_|    |_|\\___/ \\__,_|\\__,_|', 'y'), self.cprint('\n\nList of all files found: \n', 'b'), self.cprint(list(chain.from_iterable(self.locaload_list())), 'g', 1))
+         if self.options == 'locaload_list' else None]
+    # / Local load printing
+
+    # Save printing
+    def save(self):
+        self.cprint(self.options + ' list has been saved successfully', 'g')
+
+    def save_no_list(self):
+        [print('') for n in range(math.floor((self.terminal.size.y - 6) / 2) - 1)]
+        self.cprint("  _   _                                             _     _          _ \n | \\ | |                                           | |   | |        | |\n |  \\| | ___    _   _ ___  ___ _ __ ___    __ _  __| | __| | ___  __| |\n | . ` |/ _ \\  | | | / __|/ _ \\ '__/ __|  / _` |/ _` |/ _` |/ _ \\/ _` |\n | |\\  | (_) | | |_| \\__ \\  __/ |  \\__ \\ | (_| | (_| | (_| |  __/ (_| |\n |_| \\_|\\___/   \\__,_|___/\\___|_|  |___/  \\__,_|\\__,_|\\__,_|\\___|\\__,_|", 'r')
+        time.sleep(2)
+
+    def header_save(self):
+        self.cprint("   _____             _                     _       _        \n  / ____|           (_)                   | |     | |       \n | (___   __ ___   ___ _ __   __ _      __| | __ _| |_ __ _ \n  \\___ \\ / _` \\ \\ / / | '_ \\ / _` |    / _` |/ _` | __/ _` |\n  ____) | (_| |\\ V /| | | | | (_| |   | (_| | (_| | || (_| |\n |_____/ \\__,_| \\_/ |_|_| |_|\\__, |    \\__,_|\\__,_|\\__\\__,_|\n                              __/ |                         \n                             |___/                          \n\n", 'y')
+    # / Save printing
+
+    # Manage List
+    def manage_header(self):
+        self.cprint("  __  __                                     _ _     _       \n |  \\/  |                                   | (_)   | |      \n | \\  / | __ _ _ __   __ _  __ _  ___       | |_ ___| |_ ___ \n | |\\/| |/ _` | '_ \\ / _` |/ _` |/ _ \\      | | / __| __/ __|\n | |  | | (_| | | | | (_| | (_| |  __/      | | \\__ \\ |_\\__ \\\n |_|  |_|\\__,_|_| |_|\\__,_|\\__, |\\___|      |_|_|___/\\__|___/\n                            __/ |                            \n                           |___/                             ", 'y')
+
+    def remove_users_header(self):
+        self.cprint("  _____                                                          \n |  __ \\                                                         \n | |__) |___ _ __ ___   _____   _____    _   _ ___  ___ _ __ ___ \n |  _  // _ \\ '_ ` _ \\ / _ \\ \\ / / _ \\  | | | / __|/ _ \\ '__/ __|\n | | \\ \\  __/ | | | | | (_) \\ V /  __/  | |_| \\__ \\  __/ |  \\__ \\\n |_|  \\_\\___|_| |_| |_|\\___/ \\_/ \\___|   \\__,_|___/\\___|_|  |___/", 'y')
+    
+    def manage_menu(self):
+        self.cprint('\n----------------------------------', 'r')
+        self.cprint('List of options:\n\n1. View animes in list\n2. Remove selected users\n3. Remove all users\n4. Remove loaded files', 'c')
+        self.cprint('----------------------------------', 'r')
+    
+    def manage_input(self):
+        self.cprint('Enter number of user to load its data (ENTER to finish): ', 'm', 0, 1)
+
+    def manage_delete_input(self):
+        print('')
+        self.cprint('Enter number of user to delete its data (ENTER to finish): ', 'm', 0, 1)
+
+    def manage_error(self):
+        print('Unable to find user')
+    
+    def manage_empty_list_error(self):
+        [print('') for n in range(math.floor((self.terminal.size.y - 6) / 2) - 1)]
+        self.cprint("  _   _                                      __                      _ \n | \\ | |                                    / _|                    | |\n |  \\| | ___     _   _ ___  ___ _ __ ___   | |_ ___  _   _ _ __   __| |\n | . ` |/ _ \\   | | | / __|/ _ \\ '__/ __|  |  _/ _ \\| | | | '_ \\ / _` |\n | |\\  | (_) |  | |_| \\__ \\  __/ |  \\__ \\  | || (_) | |_| | | | | (_| |\n |_| \\_|\\___/    \\__,_|___/\\___|_|  |___/  |_| \\___/ \\__,_|_| |_|\\__,_|", 'r')
+    
+    def manage_list_header(self):
+        self.cprint('\n\nList of all users found\n', 'y')
+
+    def view_anime_list_header(self):
+        self.cprint(" __      ___                              _                   _ _     _   \n \\ \\    / (_)                            (_)                 | (_)   | |  \n  \\ \\  / / _  _____      __    __ _ _ __  _ _ __ ___   ___   | |_ ___| |_ \n   \\ \\/ / | |/ _ \\ \\ /\\ / /   / _` | '_ \\| | '_ ` _ \\ / _ \\  | | / __| __|\n    \\  /  | |  __/\\ V  V /   | (_| | | | | | | | | | |  __/  | | \\__ \\ |_ \n     \\/   |_|\\___| \\_/\\_/     \\__,_|_| |_|_|_| |_| |_|\\___|  |_|_|___/\\__|", 'y')
+
+    def view_anime_list_input(self):
+        print('')
+        self.cprint('Enter number of user to view its data (ENTER to exit): ', 'm', 0, 1)
+
+    def remove_files_header(self):
+        self.cprint("  _____                                     __ _ _           \n |  __ \\                                   / _(_) |          \n | |__) |___ _ __ ___   _____   _____     | |_ _| | ___  ___ \n |  _  // _ \\ '_ ` _ \\ / _ \\ \\ / / _ \\    |  _| | |/ _ \\/ __|\n | | \\ \\  __/ | | | | | (_) \\ V /  __/    | | | | |  __/\\__ \\\n |_|  \\_\\___|_| |_| |_|\\___/ \\_/ \\___|    |_| |_|_|\\___||___/", 'y')
+
+    def remove_files_input(self):
+        print('')
+        self.cprint('Enter number of user to delete its FILE! (ENTER to finish): ', 'm', 0, 1)
+
+    def remove_files_list(self):
+        self.cprint('\n\nList of all files found: \n', 'b')
+        self.cprint(list(chain.from_iterable(self.locaload_list())), 'g', 1)
+    # / Manage List
+
+    # Create custom lists
+    def custom_header(self):
+        self.cprint("   _____                _            _ _     _       \n  / ____|              | |          | (_)   | |      \n | |     _ __ ___  __ _| |_ ___     | |_ ___| |_ ___ \n | |    | '__/ _ \\/ _` | __/ _ \\    | | / __| __/ __|\n | |____| | |  __/ (_| | ||  __/    | | \\__ \\ |_\\__ \\\n  \\_____|_|  \\___|\\__,_|\\__\\___|    |_|_|___/\\__|___/", 'y')
+        
+    def custom_list_header(self):
+        self.cprint('\nList of all users\n', 'b')
+
+    def custom_currently_loaded(self):
+        self.cprint('\nCurrently loaded\n', 'b')
+
+    def custom_input(self):
+        print('')
+        self.cprint('Enter a number of user to add his list (or "a" to add all users or ENTER to exit): ', 'm', 0, 1)
+
+    def custom_input_error(self):
+        self.cprint('List no found. Type error', 'r')
+
+    def custom_ok(self):
+        self.cprint(self.options + ' list has been added')
+
+    def custom_already_in_list(self):
+        self.cprint('This user is already in list!', 'r')
+
+    def custom_modify_header(self):
+        self.cprint('  __  __           _ _  __          _ _     _       \n |  \\/  |         | (_)/ _|        | (_)   | |      \n | \\  / | ___   __| |_| |_ _   _   | |_ ___| |_ ___ \n | |\\/| |/ _ \\ / _` | |  _| | | |  | | / __| __/ __|\n | |  | | (_) | (_| | | | | |_| |  | | \\__ \\ |_\\__ \\\n |_|  |_|\\___/ \\__,_|_|_|  \\__, |  |_|_|___/\\__|___/\n                            __/ |                   \n                           |___/                    ', 'y')
+    
+    def custom_modify_menu(self):
+        self.cprint('\n\n----------------------------------', 'r')
+        self.cprint('\nList of options: \n1. Choose options to include\n2. Choose options to exclude\n3. Include categories for each list separately\n4. Exclude categories for each list separately\nAny key to leave lists unmodified', 'c')
+        self.cprint('\n----------------------------------', 'r')
+    
+    def custom_modify_input_modes(self):
+        self.cprint('Enter a mode number: ', 'm', 0, 1)
+
+    def custom_transfer_header(self):
+        self.cprint("  _____                               _                \n |  __ \\                             | |               \n | |__) |_ _ _ __ __ _ _ __ ___   ___| |_ ___ _ __ ___ \n |  ___/ _` | '__/ _` | '_ ` _ \\ / _ \\ __/ _ \\ '__/ __|\n | |  | (_| | | | (_| | | | | | |  __/ ||  __/ |  \\__ \\\n |_|   \\__,_|_|  \\__,_|_| |_| |_|\\___|\\__\\___|_|  |___/", 'y')
+
+    def custom_transfer_menu(self):
+        if self.options == 0:
+            self.cprint('\n\nCategories to add to lists\n', 'b')
+        else:
+            self.cprint('\n\nCategories to remove from lists\n', 'b')
+            
+        self.cprint('1. Completed\n2. Dropped\n3. On hold\n4. Planned\n5. Rewatching\n6. Watching\n7. Released\n8. Ongoing\n9. Anons', 'c')
+
+    def custom_transfer_loaded(self):
+        if self.options == 0:
+            self.cprint('\n\nCategories ADDED\n', 'b')
+        else:
+            self.cprint('\n\nCategories REMOVED\n', 'b')
+
+        dictionary = {'c' : 'Completed', 'd' : 'Dropped', 'o' : 'On hold', 'p' : 'Planned',
+                      'r' : 'Rewatching', 'w' : 'Watching', 'b' : 'Released', 'n' : 'Ongoing',
+                      'm' : 'Anons'}
+
+        string = ''
+
+        for item in self.data:
+            string = string + dictionary[item] + '\n'
+
+        self.cprint(string, 'g')
+
+    def custom_for_user(self):
+        if self.options == None:
+            None
+        else:
+            self.cprint('\nCategories for user: ' + self.options, 'c')
+
+    def custom_transfer_input(self):
+        print('')
+        self.cprint('Enter option number from list: ', 'm', 0, 1)
+
+    # / Create custom lists
+
+    # Merges
+    def merges_header(self):
+        self.cprint("    _____                     _        __           \n   / ____|                   | |      / _|          \n  | (___   ___  __ _ _ __ ___| |__   | |_ ___  _ __ \n   \\___ \\ / _ \\/ _` | '__/ __| '_ \\  |  _/ _ \\| '__|\n   ____) |  __/ (_| | | | (__| | | | | || (_) | |   \n  |_____/ \\___|\\__,_|_|  \\___|_| |_| |_| \\___/|_|   \n     | (_)/ _|/ _|                                  \n   __| |_| |_| |_ ___ _ __ ___ _ __   ___ ___  ___  \n  / _` | |  _|  _/ _ \\ '__/ _ \\ '_ \\ / __/ _ \\/ __| \n | (_| | | | | ||  __/ | |  __/ | | | (_|  __/\\__ \\ \n  \\__,_|_|_| |_| \\___|_|  \\___|_| |_|\\___\\___||___/ ", 'y')
+    
+    def merges_list_header(self):
+        self.cprint('\n\nList of all users', 'b')
+
+    def merges_reference_user_input(self):
+        print('')
+        self.cprint('Enter to skip reference user or enter a user number to make it a reference user: ', 'm', 0, 1)
+
+    def merges_reference_user_input_error(self):
+        self.cprint('User not found. Type error', 'r')
+
+    def merges_reference_user_name(self):
+        self.cprint('Animes from ' + self.options + ' will not be included in final list', 'g')
+
+    def merges_list_input(self):
+        self.cprint('Choose an option: ', 'm', 0, 1)
+
+    def merges_list_print(self):
+        self.cprint('\n\nList of all comparison\n', 'b')
+        
+        self.cprint([(str(n) + '. ' + ((len(str(len(self.options))) - len(str(n))) * ' ') + 'Show animes that appear in ' + 
+                    ((len(str(len(self.options))) - len(str(n))) * ' ' + str(n)) + ' lists' + ' | Total junctions: ' + 
+                    str(int(math.factorial(len(self.options)) / (math.factorial(n) * math.factorial((len(self.options)) - n))))) 
+                    if n < len(self.options) else (str(n) + '. ' + ((len(str(len(self.options))) - len(str(n))) * ' ') + 
+                    'Show animes that appear in all lists') for n in range(1, len(self.options) + 1)], 'g', 1)
+    
+    def merges_list_type_error(self):
+        self.cprint('User not found. Type error', 'r')
+
+    # / Merges
+
+    # Main Output
+    def main_output_header(self):
+        self.cprint('           _   _ _____ __  __ ______       _      _____  _____ _______ \n     /\\   | \\ | |_   _|  \\/  |  ____|     | |    |_   _|/ ____|__   __|\n    /  \\  |  \\| | | | | \\  / | |__        | |      | | | (___    | |   \n   / /\\ \\ | . ` | | | | |\\/| |  __|       | |      | |  \\___ \\   | |   \n  / ____ \\| |\\  |_| |_| |  | | |____      | |____ _| |_ ____) |  | |   \n /_/    \\_\\_| \\_|_____|_|  |_|______|     |______|_____|_____/   |_|   ', 'y')
+        print('\n')
+    
+    def main_output_menu(self):
+        print('')
+        self.cprint('Enter a anime number to see more info (0 to print the list again or enter to exit): ', 'm', 0, 1)
+
+    def print_animelist(self):
+        [print(item) for item in [str(key) + '. ' + ((len(str(len(self.options))) - len(str(key))) * ' ') + self.options[key].russian for key in self.options]]
+    
+    def main_empty_list(self):
+        self.cprint("  _   _                      _                         __                      _ \n | \\ | |                    (_)                       / _|                    | |\n |  \\| | ___      __ _ _ __  _ _ __ ___   ___  ___   | |_ ___  _   _ _ __   __| |\n | . ` |/ _ \\    / _` | '_ \\| | '_ ` _ \\ / _ \\/ __|  |  _/ _ \\| | | | '_ \\ / _` |\n | |\\  | (_) |  | (_| | | | | | | | | | |  __/\\__ \\  | || (_) | |_| | | | | (_| |\n |_| \\_|\\___/    \\__,_|_| |_|_|_| |_| |_|\\___||___/  |_| \\___/ \\__,_|_| |_|\\__,_|", 'r')
+
+class Main_Output():
+    def __init__(self, animelist):
+        self.animelist = animelist
+        self.animedict = Convertation(animelist).convert_to_anime_dictionary()
+
+    def print_list(self):
+        Print(self.animedict).print_animelist()
+
+    def ui(self):
+        os.system('CLS')
+        Print().main_output_header()
+        print(Fore.CYAN, end = '')
+        self.print_list()
+        Print().reset()
+
+        while True:
+
+            if self.animelist == []:
+                Print().main_empty_list()
+                time.sleep(1)
+                break
+
+            Print().main_output_menu()
+
+            inp = input()
+            
+            if inp == '0':
+                os.system('CLS')
+                Print().main_output_header()
+                print(Fore.CYAN, end = '')
+                self.print_list()
+                Print().reset()
+
+            elif inp == '':
+                return 0
+
+            else:
+                try:
+                    Print_Info(self.animedict[inp]).start()
+                except:
+                    None
+
+class Print_Info():
+    large_figures = {'0' : '  ___   \n / _ \\  \n| | | | \n| | | | \n| |_| | \n \\___/  ',
+                     '1' : ' __  \n/_ | \n | | \n | | \n | | \n |_| ',
+                     '2' : ' ___   \n|__ \\  \n   ) | \n  / /  \n / /_  \n|____| ',
+                     '3' : ' ____   \n|___ \\  \n  __) | \n |__ <  \n ___) | \n|____/  ',
+                     '4' : ' _  _    \n| || |   \n| || |_  \n|__   _| \n   | |   \n   |_|   ',
+                     '5' : ' _____  \n| ____| \n| |__   \n|___ \\  \n ___) | \n|____/  ',
+                     '6' : "   __   \n  / /   \n / /_   \n| '_ \\  \n| (_) | \n \\___/  ",
+                     '7' : ' ______  \n|____  | \n    / /  \n   / /   \n  / /    \n /_/     ',
+                     '8' : '  ___   \n / _ \\  \n| (_) | \n > _ <  \n| (_) | \n \\___/  ',
+                     '9' : '  ___   \n / _ \\  \n| (_) | \n \\__, | \n   / /  \n  /_/   ',
+                     '.' : '   \n   \n   \n   \n _ \n(_)'}
+
+    info_logo = ['  ___ _  _ ___ ___  ',
+                 ' |_ _| \\| | __/ _ \\ ',
+                 '  | || .` | _| (_) |',
+                 ' |___|_|\\_|_| \\___/ ']
+
+    def __init__(self, anime):
+        self.anime = anime
+        self.terminal = Terminal()
+
+    def print_logo(self):
+        Print().cprint(self.info_logo, 'y', 1)
+
+    def generate_q1(self):
+        block = []
+
+        try:
+            block.append('Title: ' + self.anime.name + ' / ' + self.anime.russian)
+        except:
+            block.append('Title: Unable to display title')
+        try:
+            block.append('Type: ' + self.anime.kind)
+        except:
+            block.append('Type: Unable to display type')
+        try:
+            block.append('Status: ' + self.anime.status)
+        except:
+            block.append('Status: Unable to display status')
+        try:
+            block.append('Total episodes: ' + str(self.anime.episodes))
+        except:
+            block.append('Total episodes: Unable to display episodes')
+        try:
+            block.append('Episodes aired: ' + str(self.anime.episodes_aired))
+        except:
+            block.append('Episodes aired: Unable to display episodes aired')
+        try:
+            block.append('Premiere: ' + self.anime.aired_on)
+        except:
+            block.append('Premiere: Unable to display premiere')
+        try:
+            block.append('Released: ' + self.anime.released_on)
+        except:
+            block.append('Released: Unable to display release date')
+        try:
+            block.append('Duration: ' + str(self.anime.duration) + ' min')
+        except:
+            block.append('Duration: unable to display duration')
+        try:
+            block.append('URL link: ' + 'https:shikimori.one' + str(self.anime.url.split('-')[0]))
+        except:
+            block.append('URL link: Unable to display link')
+
+        return block
+
+    def generate_q2(self):
+        score_list = list()
+
+        for item in [[item[n] for item in [self.large_figures[item].split('\n') for item in self.anime.score]] for n in range(6)]:
+            row_string = ''
+            
+            for row in item:
+                row_string += row
+            
+            score_list.append(row_string)
+
+        return score_list
+
+    def generate_q3(self, q4):
+
+        size = self.terminal.size.x - max([len(item) for item in q4])
+        description = [math.floor((size - 18) / 2) * ' ' + 'Описание', '']
+        final_list = []
+
+        if self.anime.description == 'Нет описания':
+            padded_list = ['', '', '', '', '', '' * math.floor((size - 22) / 2) + 'Нет описания', '', '', '', '', '', '']
+
+        else:
+            try:
+                padded_list = self.anime.pad_text(size - 10)
+                padded_list = padded_list.split('\n')
+            except:
+                padded_list = ['', '', '', '', '', '' * math.floor((size - 22) / 2) + 'Нет описания', '', '', '', '', '', '']
+
+        while len(q4) > len(padded_list):
+            padded_list.append('')
+
+        [description.append(item) for item in padded_list]
+
+        for item in description:
+            while len(item) != size - 1:
+                item += ' '
+            final_list.append(item)
+
+        return final_list, q4
+    
+    def generate_q4(self):
+
+        sys_dictionary = {item['name'] : item['value'] for item in self.anime.rates_scores_stats}
+        frames = [0 + max(list({item['name'] : item['value'] for item in self.anime.rates_scores_stats}.values()))/40 * i for i in range(41)]
+        temp_list = [(str(key) + ' ' * (2 - len(str(key))) + ' : ' + '█' * {key : i + 1 for key in sys_dictionary for i in range(40) if frames[i] <= sys_dictionary[key] <= frames[i + 1]}[key] + ' (' + str(sys_dictionary[key]) + ')') for key in sys_dictionary]
+        score_list = [math.floor((max([len(item) for item in temp_list]) - 16) / 2) * ' ' + 'Shikimori rating', '']
+        [score_list.append(item) for item in temp_list]
+
+        return score_list
+    
+    def print_q1_q2(self, q1, q2):
+        [Print().print_color(q1.pop(0) + '\n', 'g') for i in range(len(q1) - 6)]
+        [(Print().print_color(q1[i], 'g'), print((self.terminal.size.x - len(q1[i]) - len(q2[i]) - 11) * ' ', end = ''), Print().print_color(q2[i] + '\n', 'r')) for i in range(5)]
+        [(Print().print_color(q1[5], 'g'), print((self.terminal.size.x - len(q1[5]) - len(q2[5]) - 11) * ' ', end = ''), Print().print_color(q2[5], 'r'), print(' User score'))]
+        print('')
+
+    def print_q3_q4(self, q4):
+        q3, q4 = self.generate_q3(q4)
+
+        [(Print().print_color(q3[i]), Print().print_color(q4[i] + '\n', 'c')) for i in range(len(q4))]
+        [Print().print_color(item + '\n') for item in q3[12 : len(q3)] if len(q3) > 12]
+
+    def start(self):
+
+        self.print_logo()
+        print('')
+        
+        try:
+
+            self.print_q1_q2(self.generate_q1(), self.generate_q2())
+            self.print_q3_q4(self.generate_q4())
+        
+        except:
+
+            None
+
+def progress_bar(iteration, total, prefix = '', suffix = '', decimals = 2, length = 100, fill = '█', printEnd = "\r"):
+    
+    length = Terminal().size.x - len(prefix) - len(suffix) - 12
+    
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)
-    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = printEnd)
+    
+    Print().cprint_progress('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), 'r')
+    
     if iteration == total: 
         print('\r%s |%s| %s%% %s' % (prefix, bar, ("{0:." + str(decimals) + "f}").format(100 * (total / float(total))), suffix), end = printEnd)
 
-#Get user data from internet
+def create_custom_lists(users_list, mode = 0):
 
-def get_user_data(nick):
-    def get_data(user_id : str):
-        headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:45.0) Gecko/20100101 Firefox/45.0'}
-        url = 'https://shikimori.one/' + user_id + '/list_export/animes.json'
-        data = requests.get(url, headers = headers, allow_redirects = True)
-        return json.loads(data.content.decode())
+    def transfer(options, user = None):
+        dictionary = {b'1' : 'c', b'2' : 'd', b'3' : 'o', b'4' : 'p', b'5' : 'r', b'6' : 'w', b'7' : 'b', b'8' : 'n', b'9' : 'm'}
+        params_list = []
 
-    def get_id(nick):
-        raw_data = get_data(nick)
-        id_list = []
-        for item in raw_data:
-            id_list.append(item['target_id'])
-        return id_list, raw_data
+        while True:
 
-    def return_api(nick):
-        ids, raw_data = get_id(nick)
-        api_data = []
-        count = 0
-        for item in ids:
-            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:45.0) Gecko/20100101 Firefox/45.0'}
-            url = 'https://shikimori.one/api/animes/' + str(item)
-            data = requests.get(url, headers = headers, allow_redirects = True)
-            printProgressBar(count, len(ids), prefix = 'Processing: ', suffix = 'Complete', decimals = 1, length = (size()[0] - 33), fill = '█', printEnd = "\r")
-            while len(data.content.decode()) <= 20:
-                data = requests.get(url, headers = headers, allow_redirects = True)
-            api_data.append(json.loads(data.content.decode()))
-            count += 1
-        printProgressBar(len(ids), len(ids), prefix = 'Processing: ', suffix = 'Complete', decimals = 1, length = (size()[0] - 33), fill = '█', printEnd = "\r")
-        return api_data, raw_data
+            os.system('CLS')
+            Print().custom_transfer_header()
+            Print(user).custom_for_user()
 
-    def final(nick):
-        data = []
-        api_data, raw_data = return_api(nick)
-        for item in api_data:
-            dct = {}
-            dct['idt'] = item['id']
-            dct['name'] = item['name']
-            dct['russian'] = item['russian']
-            dct['url'] = item['url']
-            dct['description'] = item['description']
-            dct['kind'] = item['kind']
-            dct['score'] = item['score']
-            dct['status'] = item['status']
-            dct['episodes'] = item['episodes']
-            dct['episodes_aired'] = item['episodes_aired']
-            dct['aired_on'] = item['aired_on']
-            dct['released_on'] = item['released_on']
-            dct['rating'] = item['rating']
-            dct['duration'] = item['duration']
-            dct['anons'] = item['anons']
-            dct['ongoing'] = item['ongoing']
-            dct['myanimelist_id'] = item['myanimelist_id']
-            dct['rates_scores_stats'] = item['rates_scores_stats']
-            dct['rates_statuses_stats'] = item['rates_statuses_stats']
-            dct['next_episode_at'] = item['next_episode_at']
-            for item_2 in raw_data:
-                if item['id'] == item_2['target_id']:
-                    dct['user_status'] = item_2['status']
-                    dct['user_episodes'] = item_2['episodes']
-            data.append(dct)
-        return data
+            if params_list != []:
+                Print(options, params_list).custom_transfer_loaded()
 
-    def transfer(nick):
-        data = final(nick)
-        data_list = []
-        for item in data:
-            data_list.append(Anime(item['idt'], item['name'], item['russian'], item['url'], item['description'], 
-                                   item['kind'], item['score'], item['status'], item['episodes'], 
-                                   item['episodes_aired'], item['aired_on'], item['released_on'],
-                                   item['rating'], item['duration'], item['anons'], item['ongoing'], item['myanimelist_id'], 
-                                   item['rates_scores_stats'], item['rates_statuses_stats'], item['next_episode_at'], 
-                                   item['user_status'], item['user_episodes']))
-        return data_list
+            Print(options).custom_transfer_menu()
 
-    final_list = transfer(nick)
-    for item in final_list:
-        try:
-            item.filt()
-        except:
-            None
-    return final_list
+            Print().custom_transfer_input()
+            inp = msvcrt.getch()
 
-# Time class to save files
+            if inp == b'\r':
+                if options == 0:
+                    return params_list
 
-class Custom_time():
-    def __init__(self, year, month, day, hour, minute, sec, wday):
-        self.year = year
-        if len(str(month)) == 1:
-            self.month = '0' + str(month)
-        else:
-            self.month = month
-        if len(str(day)) == 1:
-            self.day = '0' + str(day)
-        else:
-            self.day = day
-        if len(str(hour)) == 1:
-            self.hour = '0' + str(hour)
-        else:
-            self.hour = hour
-        if len(str(minute)) == 1:
-            self.minute = '0' + str(minute)
-        else:
-            self.minute = minute
-        if len(str(sec)) == 1:
-            self.sec = '0' + str(sec)
-        else:
-            self.sec = sec
-        self.wday = weekdays(wday)
-
-def weekdays(wday):
-    if wday == 6:
-        return 'Sunday'
-    elif wday == 0:
-        return 'Monday'
-    elif wday == 1:
-        return 'Tuesday'
-    elif wday == 2:
-        return  'Wednesday'
-    elif wday == 3:
-        return  'Thursday'
-    elif wday == 4:
-        return  'Friday'
-    elif wday == 5:
-        return  'Saturday'
-
-def create_time():
-    current_time = time()
-    current_time = Custom_time(current_time.tm_year, current_time.tm_mon, current_time.tm_mday, current_time.tm_hour,
-                               current_time.tm_min, current_time.tm_sec, current_time.tm_wday)
-    string = 'Created at: ' + str(current_time.hour) + ':' + str(current_time.minute) + ':' + str(current_time.sec)
-    string += ', ' + str(current_time.day) + '/' + str(current_time.month) + '/' + str(current_time.year)
-    string += ', ' + current_time.wday
-    return string
-
-# Save data to file
-
-def save(data):
-    path = str(os.getcwd())
-    path += '\\ShokiMore_Data'
-    try:
-        os.mkdir(path)
-    except:
-        None
-    c = 0
-    td = {}
-    nd = {}
-    print('\nList of users: \n')
-    for key in data:
-        print(str(c + 1) + '. ' + key)
-        td[str(c + 1)] = key
-        c += 1
-    print(str(c + 1) + '. All items' )
-    inp = input('\nEnter numbers of users which data should be saved separated by spaces: ')
-    print('')
-    if inp == '':
-        return 0
-    if inp == str(c + 1):
-        nd = data
-    else:
-        inp = inp.split(' ')
-        for item in inp:
-            try:
-                nd[td[item]] = data[td[item]]
-            except:
-                print('Type error!')
-                return 0
-    for key in nd:
-        first_dict = []
-        first_dict.append(create_time())
-        for item in data[key]:
-            second_dict = {}
-            second_dict['idt'] = item.idt
-            second_dict['name'] = item.name
-            second_dict['russian'] = item.russian
-            second_dict['url'] = item.url
-            second_dict['description'] = item.description
-            second_dict['kind'] = item.kind
-            second_dict['score'] = item.score
-            second_dict['status'] = item.status
-            second_dict['episodes'] = item.episodes
-            second_dict['episodes_aired'] = item.episodes_aired
-            second_dict['aired_on'] = item.aired_on
-            second_dict['released_on'] = item.released_on
-            second_dict['rating'] = item.rating
-            second_dict['duration'] = item.duration
-            second_dict['anons'] = item.anons
-            second_dict['ongoing'] = item.ongoing
-            second_dict['myanimelist_id'] = item.myanimelist_id
-            second_dict['rates_scores_stats'] = item.rates_scores_stats
-            second_dict['rates_statuses_stats'] = item.rates_statuses_stats
-            second_dict['next_episode_at'] = item.next_episode_at
-            second_dict['user_status'] = item.user_status
-            second_dict['user_episodes'] = item.user_episodes
-            first_dict.append(second_dict)
-        check = 0
-        count = 0
-        if 'Created at: ' in key:
-            for i in range(len(key)):
-                if key[i : i + 12] == 'Created at: ':
-                    new = key[0 : i - 2]
-                    break
-            tmp = new
-            key = new
-        else:
-            tmp = key
-        while check != 1:
-            count += 1
-            tmp = key + '_' + str(count)
-            temp_path = path + '\\' + tmp + '.json'
-            try:
-                file = open(temp_path, 'r')
-                tmp = key + '_' + str(count)
-            except:
-                file = open(temp_path, 'w')
-                check = 1
-        file.write(json.dumps(first_dict))
-        file.close()
-        print(key + ' data was saved successfully!')
-    return 0
-
-# Load data from file
-
-def supreme_load():
-    path = str(os.getcwd())
-    path += '\\ShokiMore_Data'
-    current_working_direction = path
-    rootdir = Path(current_working_direction)
-    file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
-    temp_dict = {}
-    temp_dict_sup = {}
-    temp_list = []
-    count = 0
-    for item in file_list:
-        file = open(item, 'rb')
-        data = json.load(file)
-        file.close
-        tm = data[0]
-        temp_dict[item] = tm
-    for key in temp_dict:
-        temp_list_2 = str(key).split('\\')
-        temp_list.append(temp_list_2[len(temp_list_2) - 1])
-    temp_list_simple = [item[0:len(item) - 7] for item in temp_list]
-    count = 0
-    for key in temp_dict:
-        temp_dict_sup[temp_list_simple[count] + '  ' + temp_dict[key]] = key
-        count += 1
-    count = 0
-    choice_dict = {}
-    for key in temp_dict_sup:
-        print((str(count + 1)) + '. ' + key)
-        choice_dict[str(count + 1)] = key
-        count += 1
-    inp = input('\nEnter a numbers of users which data should be loaded separated by a space: ')
-    print('')
-    if inp == '':
-        return 0
-    inp = inp.split(' ')
-    load_dict = {}
-    for letter in inp:
-        try:
-            load_dict[choice_dict[letter]] = temp_dict_sup[choice_dict[letter]]
-        except:
-            print('Type error!')
-    final_dict = {}
-    for key in load_dict:
-        final_dict[key] = load(load_dict[key])
-        print('Data for user ' + key + ' has been loaded!')
-    return final_dict
-
-def load(path):
-    file = open(path, 'rb')
-    data = json.load(file)
-    file.close
-    ret_d = {}
-    tm = data[0]
-    del data[0]
-    data_list = []
-    for item in data:
-        data_list.append(Anime(item['idt'], item['name'], item['russian'], item['url'], item['description'], 
-                               item['kind'], item['score'], item['status'], item['episodes'], 
-                               item['episodes_aired'], item['aired_on'], item['released_on'],
-                               item['rating'], item['duration'], item['anons'], item['ongoing'], item['myanimelist_id'], 
-                               item['rates_scores_stats'], item['rates_statuses_stats'], item['next_episode_at'], 
-                               item['user_status'], item['user_episodes']))
-    for item in data_list:
-        try:
-            item.filt()
-        except:
-            None
-    return data_list
-
-#Main body cell
-
-def generate_users():
-    global users_list
-    users_list = {}
-    inp_1 = input('Enter a number of users: ')
-    try:
-        inp_1 = int(inp_1)
-    except:
-        print('Type Error!')
-        return 0
-    nick_list = []
-    for i in range(inp_1):
-        print('Enter ' + str(i + 1) + ' nickname: ', end = '')
-        nick_list.append(input())
-    for i in range(inp_1):
-        users_list[nick_list[i]] = get_user_data(nick_list[i])
-    print('\nDone!')
-
-def create_custom_lists():
-    temp_dict = {}
-    count = 0
-    print('\nExisting users: \n')
-    for key in users_list:
-        print(str(count + 1) + '. ' + key)
-        temp_dict[str(count + 1)] = key
-        count += 1
-    inp = input('Choose users that should be compared separated by spaces: ')
-    if inp == '':
-        return 0
-    temp_dict_2 = {}
-    inp = inp.split(' ')
-    for letter in inp:
-        try:
-            temp_dict_2[temp_dict[letter]] = users_list[temp_dict[letter]]
-        except:
-            print('Type error!')
-            return 0
-    return temp_dict_2
-
-def compare():
-    item_list_merge = []
-    ban_list = []
-    global_dict = create_custom_lists()
-    
-    if global_dict == 0:
-        return 0
-    
-    if len(global_dict) < 2:
-        print('Not enough users to compare!')
-        return 0
-    
-    else:
-        all_merged = [item for key in global_dict for item in global_dict[key]]
-        id_list = [item.idt for item in all_merged]
-        id_list_merge = [item for item in id_list if id_list.count(item) == len(global_dict)]
-        for item in all_merged:
-            if item.idt in id_list_merge:
-                if item.idt not in ban_list:
-                    item_list_merge.append(item)
-                    ban_list.append(item.idt)
-        return item_list_merge, 'List of animes that appear in all lists: '
-    
-def print_sort(data : tuple):
-    if data == 0:
-        return 0
-    text = data[1]
-    data = data[0]
-    if sort == 0:
-        working_dict = create_working_dict(data)
-        print('\n' + text + '\n')
-        for key in working_dict:
-            print(str(key) + '. ' + working_dict[key].russian)
-        info(working_dict)
-
-def info(working_dict):
-    inp = input('\nEnter a anime number to see more detatils, or 0 to see the list again or enter to exit: ')
-    while inp != '':
-        if inp == '0':
-            count = 0
-            anime_list = list(working_dict.values())
-            print('')
-            for item in anime_list:
-                print(str(count + 1) + '. ' + item.russian)
-                count += 1
-        else:
-            try:
-                current_anime = working_dict[int(inp)]
-                sub_info(current_anime)
-            except:
-                print('\nType error!\n')
-        
-        inp = input('\nEnter a anime number to see more detatils, or 0 to see the list again or enter to exit: ')
-        
-def create_working_dict(data : list):
-    count = 0
-    working_dict = {}
-    for item in data:
-        working_dict[count + 1] = item
-        count += 1
-    return working_dict
-
-def different():
-    item_list_unmerge = []
-    ban_list = []
-    users_dict = {}
-    global_dict = create_custom_lists()
-    
-    if global_dict == 0:
-        return 0
-    
-    if len(global_dict) < 2:
-        print('Not enough users to compare!')
-        return 0
-    
-    else:
-        all_merged = [item for key in global_dict for item in global_dict[key]]
-        id_list = [item.idt for item in all_merged]
-        count = 1
-        print('\nPick a user, from which point of view all other lists will be compared')
-        print('Choose a last avaliable option to make module work as an inverse of compare module\n')
-        for key in global_dict:
-            users_dict[str(count)] = key
-            print(str(count) + '. ' + key)
-            count += 1
-        print(str(count) + '. Compare inverse')
-        inp = input('Enter a number: ')
-        if inp == str(count):
-            primary_user = 'All'
-        else:
-            try:
-                primary_user = users_dict[inp]
-            except:
-                print('Type error!')
-                return 0
-        try:
-            primary_user_dict = global_dict[primary_user]
-            primary_user_id_list = [item.idt for item in primary_user_dict]
-        except:
-            primary_user_id_list = {}
-        id_list_unmerge = [item for item in id_list if id_list.count(item) < len(global_dict)]
-        for item in all_merged:
-            if item.idt in id_list_unmerge:
-                if item.idt not in ban_list:
-                    if item.idt not in primary_user_id_list:
-                        item_list_unmerge.append(item)
-                        ban_list.append(item.idt)
-        return item_list_unmerge, 'List of animes that differ from primary list'
-
-def sub_info(current_anime):
-    print('\n')
-    for item in info_logo:
-        tsize = size()[0]
-        tsize = floor(tsize) / 2 - len(item) / 2
-        print(' ' * int(tsize) + item)
-    print('')
-    zero_module(current_anime)
-    print('\n')
-    try:
-        first_module(current_anime.description, current_anime.rates_scores_stats)
-    except:
-        print('\nUnable to display additional information')
-        
-def create_bars(figures):
-    render_list = []
-    render_list.append('               Shikimori rating')
-    render_list.append('')
-    dict_converted = {}
-    dict_frames = {}
-    for item in figures:
-        dict_converted[item['name']] = item['value']
-    step = max(list(dict_converted.values()))/40
-    frames = [0 + step * i for i in range(41)]
-    for key in dict_converted:
-        for i in range(40):
-            if frames[i] <= dict_converted[key] <= frames[i + 1]:
-                dict_frames[key] = i + 1
-    fill = '█'
-    for key in dict_converted:
-        render_list.append(str(key) + ' ' * (2 - len(str(key))) + ' : ' + fill * dict_frames[key] + ' (' + str(dict_converted[key]) + ')')
-    return render_list
-
-def pad_text(text, pad):
-    string = ''
-    lst = []
-    lst.append('                    Описание')
-    lst.append('')
-    error = 0
-    for i in range(len(text)):
-        if i % pad == 0:
-            if i != 0:
-                if text[i] == ' ':
-                    lst.append(string)
-                    string = ''
-                    string += text[i]
-                    error = 1
                 else:
-                    if len(text) - i == 1:
-                        None
-                    if text[i - 1] == ' ':
-                        lst.append(string)
-                        string = ''
-                        string += text[i]
-                        error = 1
-                    else:
-                        string += '-'
-                        lst.append(string)
-                        string = ''
-                        string += text[i]
-                        error = 1
-        if error == 0:
-            string += text[i]
-        if error == 1:
-            error = 0
-    lst.append(string)
-    return lst
+                    letters = ['c', 'd', 'o', 'p', 'r', 'w', 'b', 'n', 'm']
+                    [letters.remove(item) for item in params_list]
 
-def first_module(text, figures):
-    try:
-        text = pad_text(text, 50)
-        bar = create_bars(figures)
-        len_text = [len(item) for item in text]
-        len_bar = [len(item) for item in bar]
-        max_text = max(len_text)
-        max_bar = max(len_bar)
-        gap = size()[0] - (max(len_text) + max(len_bar))
-        print_list = []
-        while len(text) < len(bar):
-            text.append('')
-        count = 0
-        for item in text:
-            lenght = len(item)
-            current_gap = max_text - lenght
-            current_gap = current_gap + gap
+                    return letters
+
             try:
-                string = item + (current_gap - 1) * ' ' + bar[count]
-                print(string)
+                [params_list.append(dictionary[inp]) if dictionary[inp] not in params_list else None]
+
             except:
-                string = item
-                print(string)
-            count += 1
-    except:
-        for item in create_bars(figures):
-            print(item)
-        print('\nОписание отсутствует')
-        
-def zero_module(current_anime):
-    left_block = []
-    try:
-        left_block.append('Title: ' + current_anime.name + ' / ' + current_anime.russian)
-    except:
-        left_block.append('Title: Unable to display title')
-    try:
-        left_block.append('Status: ' + current_anime.status)
-    except:
-        left_block.append('Status: Unable to display status')
-    try:
-        left_block.append('Type: ' + current_anime.kind)
-    except:
-        left_block.append('Type: Unable to display type')
-    try:
-        left_block.append('Total episodes: ' + str(current_anime.episodes))
-    except:
-        left_block.append('Total episodes: Unable to display episodes')
-    try:
-        left_block.append('Episodes aired: ' + str(current_anime.episodes_aired))
-    except:
-        left_block.append('Episodes aired: Unable to display episodes aired')
-    try:
-        left_block.append('Premiere: ' + current_anime.aired_on)
-    except:
-        left_block.append('Premiere: Unable to display premiere')
-    try:
-        left_block.append('Released: ' + current_anime.released_on)
-    except:
-        left_block.append('Released: Unable to display release date')
-    try:
-        left_block.append('Duration: ' + str(current_anime.duration) + ' min')
-    except:
-        left_block.append('Duration: unable to display duration')
-    try:
-        print_url = current_anime.url
-        print_url = print_url.split('-')
-        print_url = print_url[0]
-        left_block.append('URL link: ' + 'https:shikimori.one' + str(print_url))
-    except:
-        left_block.append('URL link: Unable to display link')
-    try:
-        if current_anime.anons == True:
-            left_block.append('Anons')
-        elif current_anime.ongoing == True:
-            left_block.append('Ongoing')
-            left_block.append('Next episode at: ' + current_anime.next_episode_at)
-        else:
-            None
-    except:
-        None
-    try:
-        lenght = [len(item) for item in left_block]
-        left_max = max(lenght)
-        s = size()[0]
-        big_f = big_figures(current_anime.score)
-        big_l = [len(item) for item in big_f]
-        big_max = max(big_l)
-        gap = s - left_max - big_max - 14
-        while len(left_block) < len(big_f):
-            left_block.append('')
-        c = 0
-        while len(left_block) >= 7:
-            print(left_block[c])
-            del left_block[c]
-            c += 1
-        for i in range(6):
-            l = len(left_block[i])
-            d = left_max - l
-            g = d + gap
-            if i != 5:
-                print(left_block[i] + ' ' * g + big_f[i])
-            else:
-                print(left_block[i] + ' ' * g + big_f[i] + '   User score')
-        count = 0
-        for item in left_block:
-            if count <= 5:
                 None
-            else:
-                print(item)
-            count += 1
-    except:
-        for item in left_block:
-            print(item)
 
-def big_figures(score):
-    lst = []
-    sup_lst = []
-    for figure in score:
-        if figure == '0':
-            lst.append(f0)
-        if figure == '1':
-            lst.append(f1)
-        if figure == '2':
-            lst.append(f2)
-        if figure == '3':
-            lst.append(f3)
-        if figure == '4':
-            lst.append(f4)
-        if figure == '5':
-            lst.append(f5)
-        if figure == '6':
-            lst.append(f6)
-        if figure == '7':
-            lst.append(f7)
-        if figure == '8':
-            lst.append(f8)
-        if figure == '9':
-            lst.append(f9)
-        if figure == '.':
-            lst.append(dot)
-    sup_lst = [item.split('\n') for item in lst]
-    line1 = sup_lst[0][0] + sup_lst[1][0] + sup_lst[2][0] + sup_lst[3][0]
-    line2 = sup_lst[0][1] + sup_lst[1][1] + sup_lst[2][1] + sup_lst[3][1]
-    line3 = sup_lst[0][2] + sup_lst[1][2] + sup_lst[2][2] + sup_lst[3][2]
-    line4 = sup_lst[0][3] + sup_lst[1][3] + sup_lst[2][3] + sup_lst[3][3]
-    line5 = sup_lst[0][4] + sup_lst[1][4] + sup_lst[2][4] + sup_lst[3][4]
-    line6 = sup_lst[0][5] + sup_lst[1][5] + sup_lst[2][5] + sup_lst[3][5]
-    return [line1, line2, line3, line4, line5, line6]
+    os.system('CLS')
 
-def size():
-    def get_terminal_size():
-        current_os = platform.system()
-        tuple_xy = None
+    if users_list == []:
+        Print().manage_empty_list_error()
+        time.sleep(2)
+        return 0
 
-        if current_os == 'Windows':
-            tuple_xy = _get_terminal_size_windows()
+    if mode == 0:
 
-            if tuple_xy is None:
-                tuple_xy = _get_terminal_size_tput()
+        custom_dict = Convertation(users_list).convert_to_dictionary()
+        custom_list = []
 
-        if current_os in ['Linux', 'Darwin'] or current_os.startswith('CYGWIN'):
-            tuple_xy = _get_terminal_size_linux()
+        while True:
+            os.system('CLS')
+            Print().custom_header()
 
-        if tuple_xy is None:
-            tuple_xy = (80, 25)
-        return tuple_xy
+            if custom_list != []:
+                Print().custom_currently_loaded()
+                Print().cprint(Print(custom_list).print_users_list(), 'c', 1)
 
+            Print().custom_list_header()
+            Print().cprint(Print(users_list).print_users_list(), 'g', 1)
 
-    def _get_terminal_size_windows():
+            Print().custom_input()
+            inp = input()
 
-        try:
-            from ctypes import windll, create_string_buffer
-            h = windll.kernel32.GetStdHandle(-12)
-            csbi = create_string_buffer(22)
-            res = windll.kernel32.GetConsoleScreenBufferInfo(h, csbi)
-            if res:
-                (bufx, bufy, curx, cury, wattr,
-                 left, top, right, bottom,
-                 maxx, maxy) = struct.unpack("hhhhHhhhhhh", csbi.raw)
-                sizex = right - left + 1
-                sizey = bottom - top + 1
-                return sizex, sizey
-        except:
-            pass
+            if inp == 'a':
+                custom_list = users_list
 
+                os.system('CLS')
+                Print().custom_header()
+                Print().custom_currently_loaded()
+                Print().cprint(Print(custom_list).print_users_list(), 'c', 1)
+                time.sleep(2)
 
-    def _get_terminal_size_tput():
+                return users_list
 
-        try:
-            cols = int(subprocess.check_call(shlex.split('tput cols')))
-            rows = int(subprocess.check_call(shlex.split('tput lines')))
-            return (cols, rows)
-        except:
-            pass
-
-
-    def _get_terminal_size_linux():
-
-        def ioctl_GWINSZ(fd):
             try:
-                import fcntl
-                import termios
-                cr = struct.unpack('hh',
-                                   fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
-                return cr
 
+                [custom_list.append(custom_dict[inp]) if custom_dict[inp] not in custom_list else (Print().custom_already_in_list(), time.sleep(0.5))]
+            
             except:
-                pass
 
-        cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
+                if inp == '':
+                    return custom_list
 
-        if not cr:
+                else:
+                    Print().custom_input_error()
+                    time.sleep(0.5)
+
+    if mode == 1:
+
+        custom_dict = Convertation(users_list).convert_to_dictionary()
+        custom_list = []
+
+        while True:
+            os.system('CLS')
+            Print().custom_header()
+
+            if custom_list != []:
+                Print().custom_currently_loaded()
+                Print().cprint(Print(custom_list).print_users_list(), 'c', 1)
+
+            Print().custom_list_header()
+            Print().cprint(Print(users_list).print_users_list(), 'g', 1)
+
+            Print().custom_input()
+            inp = input()
+
+            if inp == 'a':
+                custom_list = users_list
+
+                os.system('CLS')
+                Print().custom_header()
+                Print().custom_currently_loaded()
+                Print().cprint(Print(custom_list).print_users_list(), 'c', 1)
+                time.sleep(2)
+
+                break
+
             try:
-                fd = os.open(os.ctermid(), os.O_RDONLY)
-                cr = ioctl_GWINSZ(fd)
-                os.close(fd)
 
+                [custom_list.append(custom_dict[inp]) if custom_dict[inp] not in custom_list else (Print().custom_already_in_list(), time.sleep(0.5))]
+            
             except:
-                pass
 
-        if not cr:
-            try:
-                cr = (os.environ['LINES'], os.environ['COLUMNS'])
+                if inp == '':
+                    break
 
-            except:
-                return None
+                else:
+                    Print().custom_input_error()
+                    time.sleep(0.5)
 
-        return int(cr[1]), int(cr[0])
+        os.system('CLS')
 
-    def det_size():
-        if __name__ == "__main__":
-            sizex, sizey = get_terminal_size()
+        Print().custom_modify_header()
+        Print().custom_modify_menu()
+        Print().custom_modify_input_modes()
 
-            return [sizex, sizey]
-    return det_size()
+        inp = msvcrt.getch()
+        
+        if inp == b'1':
+            letters = ''
 
-def print_loop():
-    print('\n\n      List of option: \n\n0. Print this menu\n1. Load data from internet\n2. Load data from local file\n3. Save data to local file')
-    print('4. Merges search\n5. Basic difference search\nEnter to exit')
+            for item in list(chain.from_iterable(transfer(0))):
+                letters += item
 
-def sub_menu():
-    global users_list
-    print('')
-    inp = input('Enter a number: ')
-    print('')
-    if inp == '1':
+            [item.custom_list(letters) for item in custom_list]
+            return custom_list
+
+
+        elif inp == b'2':
+            letters = ''
+
+            for item in list(chain.from_iterable(transfer(1))):
+                letters += item
+
+            [item.custom_list(letters) for item in custom_list]
+            return custom_list
+
+
+        elif inp == b'3':
+            for item in custom_list:
+                letters = ''
+
+                for letter in list(chain.from_iterable(transfer(0, item.nickname))):
+                    letters += letter
+
+                item.custom_list(letters)
+            
+            return custom_list
+
+        elif inp == b'4':
+            for item in custom_list:
+                letters = ''
+
+                for letter in list(chain.from_iterable(transfer(1, item.nickname))):
+                    letters += letter
+
+                item.custom_list(letters)
+            
+            return custom_list
+        
+        else:
+            [item.custom_list('cdoprwbnm') for item in custom_list]
+            return custom_list
+
+def users(mode, options = None):
+    
+    if mode == 0:
+        os.system('CLS')
+        Print().header_webload()
+        Print().input_webload()
+        inp = 'defaults'
+
+        users_to_load = [(Print(count + 1).webload_list(), inp := input()) for count in range(1000000) if inp != '']
+        Print().webload_start()
+        return [item for item in [AnimeList(item[1], 'webload') for item in users_to_load if item[1] != ''] if item.animelist != 'Error: Download_error']
+    
+    if mode == 1:
+        users_to_load = list()
+        os.system('CLS')
+
+        classlist = {str(n + 1) : sorted(sorted([Load(item) for item in [f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()]], key=operator.attrgetter('date'), reverse = True), key=operator.attrgetter('name'))[n] for n in range(len([f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()]))}
+
+        Print('locaload_list', classlist).load()
+
+        inp = 'defaults'
+        
         try:
-            generate_users()
+            [(Print('input_locaload').load(), inp := input(), users_to_load.append(AnimeList(classlist[inp].name, 'locaload', classlist[inp].path)), Print('locaload_ok').load()) for n in range(1000000)]
+    
         except:
-            print('Unable to load data. Check the internet connection and correctness of nicknames')
-    if inp == '2':
-        try:
-            users_list = supreme_load()
-        except:
-            print('Some errors occured, retry later')
-    if inp == '3':
-        try:
-            save(users_list)
-        except:
-            print('Some errors occured, retry later')
-    if inp == '4':
-        try:
-            print_sort(compare())
-        except:
-            print('Some errors occured, retry later')
-    if inp == '5':
-        try:
-            print_sort(different())
-        except:
-            print('Some errors occured, retry later')
-    if inp == '0':
-        print_loop()
-    if inp == '':
-        if input('Press ENTER again to exit: ') == '':
-            return "exit"
+            [Print('locaload_error').load() if inp != '' else None for n in range(1)]
+        
+        return users_to_load
+
+    if mode == 2:
+        lists_to_save = create_custom_lists(options)
+        
+        if lists_to_save == 0:
+            return 0
+
+        os.system('CLS')
+
+        if lists_to_save == []:
+            Print().save_no_list()
+
+        Print().header_save()
+        [(item.save(), Print(item.nickname).save(), time.sleep(1)) if options != [] else Print().save_no_list() for item in lists_to_save]
 
 def menu():
-    print_loop()
-    while sub_menu() != 'exit':
-        None
 
-def logo():
-    beta = 1
-    print(main_logo)
-    if beta == 1:
-        print('')
-        print('')
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        print('!!!                                             !!!')
-        print('!!!                                             !!!')
-        print('!!!          Это БЕТА ВЕРСИЯ программы          !!!')
-        print('!!!        Некоторые модули не работают!        !!!')
-        print('!!!                                             !!!')
-        print('!!!                                             !!!')
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    working_list = []
 
-def exit():
-    print('\nExited')
-    sleep(2)
+    while True:
+        os.system('CLS')
+        Print().menu()
+        Print(working_list).input_menu()
+
+        inp = msvcrt.getch()
+        
+        if inp == b'0':
+            None
+
+        elif inp == b'1':
+            working_list = Convertation(users(0) + working_list).resort()
+
+        elif inp == b'2':
+            working_list = Convertation(users(1) + working_list).resort()
+
+        elif inp == b'3':
+            users(2, working_list)
+
+        elif inp == b'4':
+            working_list = Manage(working_list).ui()
+
+        elif inp == b'5':
+            custom_list = create_custom_lists(working_list, 1)
+            if custom_list == []:
+                Print().save_no_list()
+            else:
+                Main_Output(Merges(custom_list).search_for_merges()).ui()
+
+        elif inp == b'6':
+            custom_list = create_custom_lists(working_list, 1)
+            if custom_list == []:
+                Print().save_no_list()
+            else:
+                Main_Output(Merges(custom_list).search_for_differences()).ui()
+
+        elif inp == b'7':
+            [print(item.description) for item in working_list[0].animelist]
+
+        elif inp == b't':
+            create_custom_lists(working_list, 1)
+
+        elif inp == b'\r':
+            sys.exit()
 
 def start():
-    logo()
-    variables()
+    author_logo(Terminal().size.x)
+    on_start_up()
     menu()
-    exit()
 
-start()
+start()       
