@@ -25,6 +25,7 @@ The last available option will always be less than total amount of lists.<br />
 Number of lists junctions will be printed next to each option<br />
 <br />
 There also can be a reference user picked in the beginning, to exclude everything that is on his/her list<br />
+<br />
 # requirements.txt
 Requirements are available in requirements.txt file
 # .exe
