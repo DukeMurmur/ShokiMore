@@ -26,7 +26,8 @@ Number of lists junctions will be printed next to each option<br />
 <br />
 There also can be a reference user picked in the beginning, to exclude everything that is on his/her list<br />
 <br />
-# requirements.txt
+
+## requirements.txt
 Requirements are available in requirements.txt file
 # .exe
 There is a compiled version of this program.
