@@ -10,9 +10,9 @@ There is an option to store loaded lists locally.<br />
 They will be located in the folder named ShokiMore_Data in the same directory as where the program is stored.<br />
 # Comparing lists
 There is two options to compare:<br />
-1. Merges search<br />
+Merges search<br />
 Script will search all identical items (using IDs) in the lists loaded through search function.<br /><br />
-2. Difference search<br />
+Difference search<br />
 There are several options to search differences in lists:<br />
 (As an example, a list of 4 users A B C D will be used)<br /><br />
 1. Search titles that are either in list A or B or C or D<br />
