@@ -180,7 +180,7 @@ def author_logo(lenght : int):
     print(pattern[0][0 : lenght - 1])
     print(pattern[1][0 : lenght - 1])
 
-    output = '© All rights reserved, 2020'
+    output = '© All rights reserved, 2021'
     spaces = ' ' * (lenght - len(output))
     output = spaces + output
 
@@ -738,6 +738,11 @@ class Print():
 
     def header_save(self):
         self.cprint("   _____             _                     _       _        \n  / ____|           (_)                   | |     | |       \n | (___   __ ___   ___ _ __   __ _      __| | __ _| |_ __ _ \n  \\___ \\ / _` \\ \\ / / | '_ \\ / _` |    / _` |/ _` | __/ _` |\n  ____) | (_| |\\ V /| | | | | (_| |   | (_| | (_| | || (_| |\n |_____/ \\__,_| \\_/ |_|_| |_|\\__, |    \\__,_|\\__,_|\\__\\__,_|\n                              __/ |                         \n                             |___/                          \n\n", 'y')
+    
+    def no_files_found(self):
+        [print('') for n in range(math.floor((self.terminal.size.y - 6) / 2) - 1)]
+        self.cprint('  _   _           __ _ _                        _     _       \n | \\ | |         / _(_) |                      (_)   | |      \n |  \\| | ___    | |_ _| | ___  ___     _____  ___ ___| |_ ___ \n | . ` |/ _ \\   |  _| | |/ _ \\/ __|   / _ \\ \\/ / / __| __/ __|\n | |\\  | (_) |  | | | | |  __/\\__ \\  |  __/>  <| \\__ \\ |_\\__ \\\n |_| \\_|\\___/   |_| |_|_|\\___||___/   \\___/_/\\_\\_|___/\\__|___/', 'r')
+        time.sleep(2)
     # / Save printing
 
     # Manage List
@@ -1040,14 +1045,14 @@ class Print_Info():
         final_list = []
 
         if self.anime.description == 'Нет описания':
-            padded_list = ['', '', '', '', '', '' * math.floor((size - 22) / 2) + 'Нет описания', '', '', '', '', '', '']
+            padded_list = ['', '', '', '', '', ' ' * math.floor((size - 22) / 2) + 'Нет описания', '', '', '', '', '', '']
 
         else:
             try:
                 padded_list = self.anime.pad_text(size - 10)
                 padded_list = padded_list.split('\n')
             except:
-                padded_list = ['', '', '', '', '', '' * math.floor((size - 22) / 2) + 'Нет описания', '', '', '', '', '', '']
+                padded_list = ['', '', '', '', '', ' ' * math.floor((size - 22) / 2) + 'Нет описания', '', '', '', '', '', '']
 
         while len(q4) > len(padded_list):
             padded_list.append('')
@@ -1309,6 +1314,10 @@ def users(mode, options = None):
         users_to_load = list()
         os.system('CLS')
 
+        if [f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()] == []:
+            Print().no_files_found()
+            return []
+
         classlist = {str(n + 1) : sorted(sorted([Load(item) for item in [f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()]], key=operator.attrgetter('date'), reverse = True), key=operator.attrgetter('name'))[n] for n in range(len([f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()]))}
 
         Print('locaload_list', classlist).load()
@@ -1365,30 +1374,36 @@ def menu():
 
         elif inp == b'5':
             custom_list = create_custom_lists(working_list, 1)
-            if custom_list == []:
-                Print().save_no_list()
+            if custom_list == 0:
+                None
             else:
                 Main_Output(Merges(custom_list).search_for_merges()).ui()
 
         elif inp == b'6':
             custom_list = create_custom_lists(working_list, 1)
-            if custom_list == []:
-                Print().save_no_list()
+            if custom_list == 0:
+                None
             else:
                 Main_Output(Merges(custom_list).search_for_differences()).ui()
 
-        elif inp == b'7':
+        elif inp == 'NA':
             [print(item.description) for item in working_list[0].animelist]
 
-        elif inp == b't':
+        elif inp == 'NA':
             create_custom_lists(working_list, 1)
 
         elif inp == b'\r':
-            sys.exit()
+            Print().cprint('Press ENTER again to exit: ', 'y', 0, 1)
+            if msvcrt.getch() == b'\r':
+                sys.exit()
 
 def start():
     author_logo(Terminal().size.x)
     on_start_up()
     menu()
 
-start()       
+def main():
+    if __name__ == '__main__':
+        start()
+
+main()   
