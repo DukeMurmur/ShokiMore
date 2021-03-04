@@ -1,5 +1,5 @@
 # ShokiMore
-Comparing anime lists from shikimori.one (BETA)
+Comparing anime lists from shikimori.one
 # Loading lists from shikimore.one
 Anime lists can be loaded directly from the website, user data will be loaded as json file, common data will be loaded from API using links from json file.
 Enter a nickname of the user to start data loading.<br />
@@ -7,23 +7,26 @@ Enter a nickname of the user to start data loading.<br />
 A nickname of the user will be used as the name of the list later on.
 # Loading lists from local files
 There is an option to store loaded lists locally.<br />
-They will be located in the folder named ShokiMore in the same directory as where the program is stored.<br />
-Local lists get the nickname of the user as a name, if there are more than 1 user with simmilar name, then figures 1 - amount of files will be used after a nickname.<br />
-However, date and time when the file was created will be stored in the file itself, they will appear as: 'nickname Created at date' in the program afterwards<br />
+They will be located in the folder named ShokiMore_Data in the same directory as where the program is stored.<br />
 # Comparing lists
-Local lists can not be compared with lists loaded from the website.<br />
 There is two options to compare:<br />
 1. Merges search<br />
-Script will search all identical items (using IDs) in the lists loaded to search function.<br /><br />
+Script will search all identical items (using IDs) in the lists loaded through search function.<br /><br />
 2. Difference search<br />
-To search titles, that appear in list A but don't appear in list B, use difference search for lists A B, then pick user B (To find an area of Not B)<br />
-Difference search for lists A B, then pick user A (To find an area of Not A)<br />
-Or pick the last avaliable option, then it will work as an opposite to Merges search (Not A and Not B)<br />
-Similarly it can be used for 3 or more users.
-# Windows & Linux
-File storage functions will work only on windows, however everything else works on linux as well.
+There are several options to search differences in lists:<br />
+(As an example, a list of 4 users A B C D will be used)<br /><br />
+1. Search titles that are either in list A or B or C or D<br />
+2. Search titles that are either in both lists AB or AC or AD or BC or BD or CD<br />
+3. Search titles that are either in ABC or ABD or ACD or BCD<br />
+4. Search titles that are in all 4 lists<br />
+5. Search titles that are less than in 4 lists<br />
+<br />
+The last available option will always be less than total amount of lists.<br />
+Number of lists junctions will be printed next to each option<br />
+<br />
+There also can be a reference user picked in the beginning, to exclude everything that is on his/her list<br />
 # requirements.txt
-Beautiful Soup is required
+Requirements are available in requirements.txt file
 # .exe
 There is a compiled version of this program.
 
