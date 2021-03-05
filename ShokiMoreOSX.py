@@ -193,7 +193,7 @@ def author_logo(lenght : int):
     print(Style.RESET_ALL, end = '')
 
     time.sleep(3)
-    os.system('CLS')
+    os.system('clear')
     
 class Anime():
 
@@ -464,7 +464,7 @@ class Merges():
         merged_list = list(chain.from_iterable([item.custom for item in self.users_list]))
         id_list = [operator.attrgetter('idt')(merged_list[n]) for n in range(len(merged_list))]
 
-        os.system('CLS')
+        os.system('clear')
         Print().merges_header()
         Print().merges_list_header()
         Print().cprint(Print(self.users_list).print_users_list(), 'g', 1)
@@ -518,7 +518,7 @@ class Manage():
     def ui(self):
 
         while True:
-            os.system('CLS')
+            os.system('clear')
             if self.users_list == []:
                 Print().manage_empty_list_error()
                 time.sleep(2)
@@ -555,7 +555,7 @@ class Manage():
         if self.users_list == []:
             return 0
 
-        os.system('CLS')
+        os.system('clear')
         Print().remove_users_header()
         Print().manage_list_header()
         Print().cprint(Print(self.users_list).print_users_list(), 'g', 1)
@@ -577,7 +577,7 @@ class Manage():
     def view_list(self):
 
         while True:
-            os.system('CLS')
+            os.system('clear')
             Print().view_anime_list_header()
             Print().manage_list_header()
             Print().cprint(Print(self.users_list).print_users_list(), 'g', 1)
@@ -596,7 +596,7 @@ class Manage():
 
     def remove_files(self):
         users_to_load = list()
-        os.system('CLS')
+        os.system('clear')
         Print().remove_files_header()
 
         classlist = {str(n + 1) : sorted(sorted([Load(item) for item in [f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()]], key=operator.attrgetter('date'), reverse = True), key=operator.attrgetter('name'))[n] for n in range(len([f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()]))}
@@ -928,7 +928,7 @@ class Main_Output():
         Print(self.animedict).print_animelist()
 
     def ui(self):
-        os.system('CLS')
+        os.system('clear')
         Print().main_output_header()
         print(Fore.CYAN, end = '')
         self.print_list()
@@ -946,7 +946,7 @@ class Main_Output():
             inp = input()
             
             if inp == '0':
-                os.system('CLS')
+                os.system('clear')
                 Print().main_output_header()
                 print(Fore.CYAN, end = '')
                 self.print_list()
@@ -1126,7 +1126,7 @@ def create_custom_lists(users_list, mode = 0):
 
         while True:
 
-            os.system('CLS')
+            os.system('clear')
             Print().custom_transfer_header()
             Print(user).custom_for_user()
 
@@ -1154,7 +1154,7 @@ def create_custom_lists(users_list, mode = 0):
             except:
                 None
 
-    os.system('CLS')
+    os.system('clear')
 
     if users_list == []:
         Print().manage_empty_list_error()
@@ -1167,7 +1167,7 @@ def create_custom_lists(users_list, mode = 0):
         custom_list = []
 
         while True:
-            os.system('CLS')
+            os.system('clear')
             Print().custom_header()
 
             if custom_list != []:
@@ -1183,7 +1183,7 @@ def create_custom_lists(users_list, mode = 0):
             if inp == 'a':
                 custom_list = users_list
 
-                os.system('CLS')
+                os.system('clear')
                 Print().custom_header()
                 Print().custom_currently_loaded()
                 Print().cprint(Print(custom_list).print_users_list(), 'c', 1)
@@ -1210,7 +1210,7 @@ def create_custom_lists(users_list, mode = 0):
         custom_list = []
 
         while True:
-            os.system('CLS')
+            os.system('clear')
             Print().custom_header()
 
             if custom_list != []:
@@ -1226,7 +1226,7 @@ def create_custom_lists(users_list, mode = 0):
             if inp == 'a':
                 custom_list = users_list
 
-                os.system('CLS')
+                os.system('clear')
                 Print().custom_header()
                 Print().custom_currently_loaded()
                 Print().cprint(Print(custom_list).print_users_list(), 'c', 1)
@@ -1247,7 +1247,7 @@ def create_custom_lists(users_list, mode = 0):
                     Print().custom_input_error()
                     time.sleep(0.5)
 
-        os.system('CLS')
+        os.system('clear')
 
         Print().custom_modify_header()
         Print().custom_modify_menu()
@@ -1304,7 +1304,7 @@ def create_custom_lists(users_list, mode = 0):
 def users(mode, options = None):
     
     if mode == 0:
-        os.system('CLS')
+        os.system('clear')
         Print().header_webload()
         Print().input_webload()
         inp = 'defaults'
@@ -1315,7 +1315,7 @@ def users(mode, options = None):
     
     if mode == 1:
         users_to_load = list()
-        os.system('CLS')
+        os.system('clear')
 
         if [f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()] == []:
             Print().no_files_found()
@@ -1341,7 +1341,7 @@ def users(mode, options = None):
         if lists_to_save == 0:
             return 0
 
-        os.system('CLS')
+        os.system('clear')
 
         if lists_to_save == []:
             Print().save_no_list()
@@ -1354,7 +1354,7 @@ def menu():
     working_list = []
 
     while True:
-        os.system('CLS')
+        os.system('clear')
         Print().menu()
         Print(working_list).input_menu()
 
