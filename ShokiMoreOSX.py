@@ -1135,7 +1135,7 @@ def create_custom_lists(users_list, mode = 0):
 
             Print(options).custom_transfer_menu()
 
-            Print().custom_transfer_input()
+            #Print().custom_transfer_input()
             inp = sinp()
 
             if inp == '\r':
@@ -1396,9 +1396,7 @@ def menu():
             create_custom_lists(working_list, 1)
 
         elif inp == '\r':
-            Print().cprint('Press ENTER again to exit: ', 'y', 0, 1)
-            if sinp() == '\r':
-                sys.exit()
+            sys.exit()
 
 def start():
     author_logo(Terminal().size.x)
