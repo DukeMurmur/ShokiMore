@@ -15,7 +15,7 @@ import shlex
 import struct
 import tty
 import termios
-import ansicon
+#import ansicon
 
 from pathlib import Path
 from datetime import datetime
@@ -35,7 +35,7 @@ def main_logo():
     time.sleep(3)
     os.system('CLS')
 
-main_logo()
+#main_logo()
 
 def sinp():
     fd = sys.stdin.fileno()
