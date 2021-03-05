@@ -1121,7 +1121,7 @@ def progress_bar(iteration, total, prefix = '', suffix = '', decimals = 2, lengt
 def create_custom_lists(users_list, mode = 0):
 
     def transfer(options, user = None):
-        dictionary = {b'1' : 'c', b'2' : 'd', b'3' : 'o', b'4' : 'p', b'5' : 'r', b'6' : 'w', b'7' : 'b', b'8' : 'n', b'9' : 'm'}
+        dictionary = {'1' : 'c', '2' : 'd', '3' : 'o', '4' : 'p', '5' : 'r', '6' : 'w', '7' : 'b', '8' : 'n', '9' : 'm'}
         params_list = []
 
         while True:
