@@ -7,25 +7,18 @@ import json
 import pickle
 import requests
 import binascii
+import msvcrt
 import operator
 import textwrap
+import ansicon
 import zlib
 import platform
 import shlex
 import struct
-import tty
-import termios
-import ansicon
 
 from pathlib import Path
 from datetime import datetime
 from itertools import chain
-
-from colorama import init
-
-init()
-
-from colorama import Fore, Back, Style
 
 def main_logo():
     ansicon.load()
@@ -37,18 +30,11 @@ def main_logo():
 
 main_logo()
 
-def sinp():
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
+from colorama import init
 
-    try:
-        tty.setraw(sys.stdin.fileno())
-        ch = sys.stdin.read(1)
+init()
 
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-
-    return ch
+from colorama import Fore, Back, Style
 
 def on_start_up():
 
@@ -204,7 +190,7 @@ def author_logo(lenght : int):
     print(Style.RESET_ALL, end = '')
 
     time.sleep(3)
-    os.system('clear')
+    os.system('CLS')
     
 class Anime():
 
@@ -475,7 +461,7 @@ class Merges():
         merged_list = list(chain.from_iterable([item.custom for item in self.users_list]))
         id_list = [operator.attrgetter('idt')(merged_list[n]) for n in range(len(merged_list))]
 
-        os.system('clear')
+        os.system('CLS')
         Print().merges_header()
         Print().merges_list_header()
         Print().cprint(Print(self.users_list).print_users_list(), 'g', 1)
@@ -529,7 +515,7 @@ class Manage():
     def ui(self):
 
         while True:
-            os.system('clear')
+            os.system('CLS')
             if self.users_list == []:
                 Print().manage_empty_list_error()
                 time.sleep(2)
@@ -540,23 +526,23 @@ class Manage():
             Print().manage_menu()
 
             Print().manage_input()
-            inp = sinp()
+            inp = msvcrt.getch()
 
-            if inp == '1':
+            if inp == b'1':
                 self.view_list()
 
-            if inp == '2':
+            if inp == b'2':
                 while self.remove_list() != 0:
                     None
 
-            elif inp == '3':
+            elif inp == b'3':
                 self.users_list = []
                 return self.users_list
 
-            elif inp == '4':
+            elif inp == b'4':
                 self.remove_files()
 
-            elif inp == '\r':
+            elif inp == b'\r':
                 return self.users_list
 
     def remove_list(self):
@@ -566,7 +552,7 @@ class Manage():
         if self.users_list == []:
             return 0
 
-        os.system('clear')
+        os.system('CLS')
         Print().remove_users_header()
         Print().manage_list_header()
         Print().cprint(Print(self.users_list).print_users_list(), 'g', 1)
@@ -588,7 +574,7 @@ class Manage():
     def view_list(self):
 
         while True:
-            os.system('clear')
+            os.system('CLS')
             Print().view_anime_list_header()
             Print().manage_list_header()
             Print().cprint(Print(self.users_list).print_users_list(), 'g', 1)
@@ -607,7 +593,7 @@ class Manage():
 
     def remove_files(self):
         users_to_load = list()
-        os.system('clear')
+        os.system('CLS')
         Print().remove_files_header()
 
         classlist = {str(n + 1) : sorted(sorted([Load(item) for item in [f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()]], key=operator.attrgetter('date'), reverse = True), key=operator.attrgetter('name'))[n] for n in range(len([f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()]))}
@@ -939,7 +925,7 @@ class Main_Output():
         Print(self.animedict).print_animelist()
 
     def ui(self):
-        os.system('clear')
+        os.system('CLS')
         Print().main_output_header()
         print(Fore.CYAN, end = '')
         self.print_list()
@@ -957,7 +943,7 @@ class Main_Output():
             inp = input()
             
             if inp == '0':
-                os.system('clear')
+                os.system('CLS')
                 Print().main_output_header()
                 print(Fore.CYAN, end = '')
                 self.print_list()
@@ -1132,12 +1118,12 @@ def progress_bar(iteration, total, prefix = '', suffix = '', decimals = 2, lengt
 def create_custom_lists(users_list, mode = 0):
 
     def transfer(options, user = None):
-        dictionary = {'1' : 'c', '2' : 'd', '3' : 'o', '4' : 'p', '5' : 'r', '6' : 'w', '7' : 'b', '8' : 'n', '9' : 'm'}
+        dictionary = {b'1' : 'c', b'2' : 'd', b'3' : 'o', b'4' : 'p', b'5' : 'r', b'6' : 'w', b'7' : 'b', b'8' : 'n', b'9' : 'm'}
         params_list = []
 
         while True:
 
-            os.system('clear')
+            os.system('CLS')
             Print().custom_transfer_header()
             Print(user).custom_for_user()
 
@@ -1146,10 +1132,10 @@ def create_custom_lists(users_list, mode = 0):
 
             Print(options).custom_transfer_menu()
 
-            #Print().custom_transfer_input()
-            inp = sinp()
+            Print().custom_transfer_input()
+            inp = msvcrt.getch()
 
-            if inp == '\r':
+            if inp == b'\r':
                 if options == 0:
                     return params_list
 
@@ -1165,7 +1151,7 @@ def create_custom_lists(users_list, mode = 0):
             except:
                 None
 
-    os.system('clear')
+    os.system('CLS')
 
     if users_list == []:
         Print().manage_empty_list_error()
@@ -1178,7 +1164,7 @@ def create_custom_lists(users_list, mode = 0):
         custom_list = []
 
         while True:
-            os.system('clear')
+            os.system('CLS')
             Print().custom_header()
 
             if custom_list != []:
@@ -1194,7 +1180,7 @@ def create_custom_lists(users_list, mode = 0):
             if inp == 'a':
                 custom_list = users_list
 
-                os.system('clear')
+                os.system('CLS')
                 Print().custom_header()
                 Print().custom_currently_loaded()
                 Print().cprint(Print(custom_list).print_users_list(), 'c', 1)
@@ -1221,7 +1207,7 @@ def create_custom_lists(users_list, mode = 0):
         custom_list = []
 
         while True:
-            os.system('clear')
+            os.system('CLS')
             Print().custom_header()
 
             if custom_list != []:
@@ -1237,7 +1223,7 @@ def create_custom_lists(users_list, mode = 0):
             if inp == 'a':
                 custom_list = users_list
 
-                os.system('clear')
+                os.system('CLS')
                 Print().custom_header()
                 Print().custom_currently_loaded()
                 Print().cprint(Print(custom_list).print_users_list(), 'c', 1)
@@ -1258,15 +1244,15 @@ def create_custom_lists(users_list, mode = 0):
                     Print().custom_input_error()
                     time.sleep(0.5)
 
-        os.system('clear')
+        os.system('CLS')
 
         Print().custom_modify_header()
         Print().custom_modify_menu()
-        #Print().custom_modify_input_modes()
+        Print().custom_modify_input_modes()
 
-        inp = sinp()
+        inp = msvcrt.getch()
         
-        if inp == '1':
+        if inp == b'1':
             letters = ''
 
             for item in list(chain.from_iterable(transfer(0))):
@@ -1276,7 +1262,7 @@ def create_custom_lists(users_list, mode = 0):
             return custom_list
 
 
-        elif inp == '2':
+        elif inp == b'2':
             letters = ''
 
             for item in list(chain.from_iterable(transfer(1))):
@@ -1286,7 +1272,7 @@ def create_custom_lists(users_list, mode = 0):
             return custom_list
 
 
-        elif inp == '3':
+        elif inp == b'3':
             for item in custom_list:
                 letters = ''
 
@@ -1297,7 +1283,7 @@ def create_custom_lists(users_list, mode = 0):
             
             return custom_list
 
-        elif inp == '4':
+        elif inp == b'4':
             for item in custom_list:
                 letters = ''
 
@@ -1315,7 +1301,7 @@ def create_custom_lists(users_list, mode = 0):
 def users(mode, options = None):
     
     if mode == 0:
-        os.system('clear')
+        os.system('CLS')
         Print().header_webload()
         Print().input_webload()
         inp = 'defaults'
@@ -1326,7 +1312,7 @@ def users(mode, options = None):
     
     if mode == 1:
         users_to_load = list()
-        os.system('clear')
+        os.system('CLS')
 
         if [f for f in Path(os.getcwd()).glob('**/*.smf') if f.is_file()] == []:
             Print().no_files_found()
@@ -1352,7 +1338,7 @@ def users(mode, options = None):
         if lists_to_save == 0:
             return 0
 
-        os.system('clear')
+        os.system('CLS')
 
         if lists_to_save == []:
             Print().save_no_list()
@@ -1365,35 +1351,35 @@ def menu():
     working_list = []
 
     while True:
-        os.system('clear')
+        os.system('CLS')
         Print().menu()
         Print(working_list).input_menu()
 
-        inp = sinp()
+        inp = msvcrt.getch()
         
-        if inp == '0':
+        if inp == b'0':
             None
 
-        elif inp == '1':
+        elif inp == b'1':
             working_list = Convertation(users(0) + working_list).resort()
 
-        elif inp == '2':
+        elif inp == b'2':
             working_list = Convertation(users(1) + working_list).resort()
 
-        elif inp == '3':
+        elif inp == b'3':
             users(2, working_list)
 
-        elif inp == '4':
+        elif inp == b'4':
             working_list = Manage(working_list).ui()
 
-        elif inp == '5':
+        elif inp == b'5':
             custom_list = create_custom_lists(working_list, 1)
             if custom_list == 0:
                 None
             else:
                 Main_Output(Merges(custom_list).search_for_merges()).ui()
 
-        elif inp == '6':
+        elif inp == b'6':
             custom_list = create_custom_lists(working_list, 1)
             if custom_list == 0:
                 None
@@ -1406,8 +1392,10 @@ def menu():
         elif inp == 'NA':
             create_custom_lists(working_list, 1)
 
-        elif inp == '\r':
-            sys.exit()
+        elif inp == b'\r':
+            Print().cprint('Press ENTER again to exit: ', 'y', 0, 1)
+            if msvcrt.getch() == b'\r':
+                sys.exit()
 
 def start():
     author_logo(Terminal().size.x)
@@ -1419,3 +1407,4 @@ def main():
         start()
 
 main()   
+
